@@ -11,6 +11,7 @@ local lid = require("lid")
 local stats = require("stats")
 local custom = require("custom")
 local listview = require("listview")
+local gesture = require("gesture")
 
 local screens = {
   home = require("screens.home"),
@@ -40,7 +41,25 @@ local function dispatch(name, x, y)
   current.action(app, name, x, y)
 end
 
+-- Gestures (web and computer, never the console) on screens that take them
+-- (current.gesture): one finger or the mouse feeds the recognizer, and taps
+-- fire on release so that a swipe is never also a tap.
+local gest = gesture.new()
+local gestSource -- touch id, or "mouse", while a gesture is under way
+
+local function gestures_on()
+  return not app.console and current.gesture ~= nil
+end
+
+local function gesture_event(name, info)
+  if not name then return end
+  if name == "tap" then return dispatch("tap", info.x, info.y) end
+  current.gesture(app, name, info)
+end
+
 function app.switch(name)
+  gest:cancel()
+  gestSource = nil
   if current and current.leave then current.leave(app) end
   current = screens[name]
   app.switched_at = love.timer.getTime()
@@ -200,6 +219,7 @@ function love.update(dt)
       end
     end
   end
+  if gestSource then gesture_event(gest:update(love.timer.getTime())) end
   if current.update then current.update(app, dt) end
 end
 
@@ -235,15 +255,61 @@ function love.gamepadpressed(_, button)
   dispatch(inp:button(button))
 end
 
-function love.touchpressed(_, x, y)
+function love.touchpressed(id, x, y)
   local lx, ly = ui.toLogical(x, y)
-  dispatch(inp:touch(lx, ly, love.timer.getTime()))
+  local t = love.timer.getTime()
+  if gestures_on() then
+    inp:touch(lx, ly, t) -- keeps the mouse copy of this finger out
+    if gestSource == nil or gestSource == "mouse" then
+      gestSource = id
+      gest:press(lx, ly, t)
+    end
+    return -- app.touched is set on release, after the tap
+  end
+  dispatch(inp:touch(lx, ly, t))
   app.touched = true -- after dispatch: the back button only counts once it was visible
+end
+
+function love.touchmoved(id, x, y)
+  if gestSource ~= id then return end
+  local lx, ly = ui.toLogical(x, y)
+  gesture_event(gest:move(lx, ly, love.timer.getTime()))
+end
+
+function love.touchreleased(id, x, y)
+  if gestSource ~= id then return end
+  gestSource = nil
+  local lx, ly = ui.toLogical(x, y)
+  local t = love.timer.getTime()
+  inp:touch(lx, ly, t) -- the mouse copy of a long touch comes after the release
+  gesture_event(gest:release(lx, ly, t))
+  app.touched = true
 end
 
 function love.mousepressed(x, y, button, istouch)
   local lx, ly = ui.toLogical(x, y)
-  dispatch(inp:mouse(lx, ly, button, istouch, love.timer.getTime()))
+  local t = love.timer.getTime()
+  if gestures_on() then
+    if not istouch and gestSource == nil and inp:mouse(lx, ly, button, istouch, t) then
+      gestSource = "mouse"
+      gest:press(lx, ly, t)
+    end
+    return
+  end
+  dispatch(inp:mouse(lx, ly, button, istouch, t))
+end
+
+function love.mousemoved(x, y)
+  if gestSource ~= "mouse" then return end
+  local lx, ly = ui.toLogical(x, y)
+  gesture_event(gest:move(lx, ly, love.timer.getTime()))
+end
+
+function love.mousereleased(x, y, button)
+  if gestSource ~= "mouse" or button ~= 1 then return end
+  gestSource = nil
+  local lx, ly = ui.toLogical(x, y)
+  gesture_event(gest:release(lx, ly, love.timer.getTime()))
 end
 
 -- "?" is layout-dependent, so it comes from text input (not keypressed),

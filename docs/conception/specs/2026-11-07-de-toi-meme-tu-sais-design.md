@@ -281,4 +281,11 @@ statistiques, autres langues, applis iPhone et Android.
     seuil, le post-it se décolle complètement et s'envole vers le haut ; sinon il se recolle.
   - Tant qu'il est collé, le post-it bloque le glisser gauche/droite et le toucher « suivant » ; le
     chrono continue.
+  - Réglages retenus : glisser = au moins 60 px surtout à l'horizontale en moins de 0,6 s ; appui
+    long = 0,5 s sans bouger de plus de 12 px ; le post-it se décolle au-delà de 35 % de sa hauteur
+    ou sur un coup rapide vers le haut. Tant qu'il est collé, « Passer » est bloqué aussi
+    (rien ne change le mot) ; « ‹ Retour » marche. Quitter l'écran ou la fin du chrono l'enlève.
+  - Revenir au mot précédent ne note rien dans les statistiques ; un mot revu est noté de nouveau
+    quand il repart (sans effet en pratique : statistiques sur la console seulement). Après un
+    retour, « suivant » rejoue l'historique avant de piocher de nouveaux mots.
 - Sur la console, rien ne change.

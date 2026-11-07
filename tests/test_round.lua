@@ -4,6 +4,17 @@ local function fake_deck()
   return { next = function() return "mot", nil end }
 end
 
+-- Deck giving "w1", "w2", ... and counting draws.
+local function counting_deck(limit)
+  local d = { n = 0 }
+  function d.next()
+    if limit and d.n >= limit then return nil end
+    d.n = d.n + 1
+    return "w" .. d.n, { label = "c" .. d.n }
+  end
+  return d
+end
+
 return {
   test_round_no_timer = function()
     local r = round.new(fake_deck(), 0)
@@ -93,5 +104,73 @@ return {
     r:next()
     r:finish()
     T.eq(n, 0)
+  end,
+  test_round_previous_on_first_word = function()
+    local r = round.new(counting_deck(), 0)
+    r:next()
+    T.eq(r:previous(), false)
+    T.eq(r.word, "w1")
+  end,
+  test_round_previous_before_start = function()
+    local r = round.new(counting_deck(), 0)
+    T.eq(r:previous(), false)
+    T.eq(r.word, nil)
+  end,
+  test_round_previous_goes_back = function()
+    local d = counting_deck()
+    local r = round.new(d, 0)
+    r:next(); r:next(); r:skip()
+    T.eq(r.word, "w3")
+    T.eq(r:previous(), true)
+    T.eq(r.word, "w2")
+    T.eq(r.category.label, "c2")
+    T.eq(r:previous(), true)
+    T.eq(r.word, "w1")
+    T.eq(r:previous(), false)
+    T.eq(d.n, 3) -- going back never draws
+  end,
+  test_round_forward_replays_history = function()
+    local d = counting_deck()
+    local r = round.new(d, 0)
+    r:next(); r:next(); r:next()
+    r:previous(); r:previous()
+    r:next()
+    T.eq(r.word, "w2")
+    r:skip()
+    T.eq(r.word, "w3")
+    T.eq(d.n, 3)
+    r:next()
+    T.eq(r.word, "w4") -- history used up: draw again
+    T.eq(d.n, 4)
+  end,
+  test_round_previous_restarts_timer = function()
+    local r = round.new(counting_deck(), 30)
+    r:next(); r:next()
+    r:update(25)
+    r:previous()
+    T.eq(r.remaining, 30)
+  end,
+  test_round_previous_reports_nothing = function()
+    local calls = {}
+    local r = round.new(counting_deck(), 0, function(e) calls[#calls + 1] = e end)
+    r:next(); r:next()
+    T.eq(#calls, 1)
+    r:previous()
+    T.eq(#calls, 1) -- w2 left backwards: not reported
+    r:next() -- w1 leaves forward again
+    T.eq(#calls, 2)
+    T.eq(calls[2].word, "w1")
+    r:finish()
+    T.eq(calls[3].word, "w2")
+    T.eq(calls[3].result, "fin")
+  end,
+  test_round_previous_after_empty_deck = function()
+    local r = round.new(counting_deck(2), 0)
+    r:next(); r:next(); r:next()
+    T.eq(r.word, nil)
+    T.eq(r:previous(), true)
+    T.eq(r.word, "w2")
+    r:next()
+    T.eq(r.word, nil)
   end,
 }

@@ -57,8 +57,10 @@ The others hear clues that make no sense to them, while you two just know.
 
 | Action | RG SP | Computer | Phone |
 |---|---|---|---|
-| Next word | A, or close and reopen the lid | Click, Space or Enter | Tap the screen |
+| Next word | A, or close and reopen the lid | Click, Space, Enter or drag right | Tap or swipe right |
+| Previous word | — | Drag left | Swipe left |
 | Skip word | X | P | « Passer » button |
+| Hide the word (sticky note) | — | Long press, drag up to peel it off | Long press, swipe up to peel it off |
 | Rules | SELECT | ? | « ? » |
 | My categories | Y | C | « Mes catégories » |
 | Back | B | Escape | « ‹ Retour » |
