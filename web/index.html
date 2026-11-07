@@ -7,7 +7,14 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Toi-même">
 <style>
+  @font-face { font-family: 'Calebard'; font-weight: 400; src: url('fonts/Calebard-Regular.ttf') format('truetype'); font-display: swap; }
+  @font-face { font-family: 'Calebard'; font-weight: 700; src: url('fonts/Calebard-Bold.ttf') format('truetype'); font-display: swap; }
   html, body { margin: 0; height: 100%; background: #1a1a1a; overflow: hidden; }
   body { display: flex; align-items: center; justify-content: center; }
   #canvas, #loadingCanvas {
@@ -15,11 +22,53 @@
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     touch-action: none; -webkit-user-select: none; user-select: none;
   }
+  #installBackdrop {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;
+    display: none; align-items: flex-end; justify-content: center;
+    background: rgba(0,0,0,.55);
+    padding: 0 14px calc(14px + env(safe-area-inset-bottom)); box-sizing: border-box;
+    font-family: 'Calebard', sans-serif; touch-action: none;
+  }
+  #installBackdrop.open { display: flex; }
+  #installCard {
+    width: 100%; max-width: 480px; box-sizing: border-box;
+    background: #1a1a1a; border: 2px solid #F26EF2; border-radius: 18px;
+    padding: 16px 16px 12px; color: #f4f4f4; font-size: 15px; line-height: 1.4;
+  }
+  #installCard .head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  #installCard .head img { width: 40px; height: 40px; border-radius: 9px; flex: none; }
+  #installCard h2 { margin: 0; font-weight: 700; font-size: 19px; color: #F26EF2; }
+  #installCard p { margin: 0 0 10px; font-weight: 400; }
+  #installCard .key {
+    display: inline-block; border: 1px solid #f4f4f4; border-radius: 5px;
+    padding: 0 6px; font-size: 13px; line-height: 1.4; white-space: nowrap;
+  }
+  #installCard button {
+    display: block; width: 100%; border: 0; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #installOk {
+    margin-top: 14px; padding: 11px 0; border-radius: 999px;
+    background: #F26EF2; color: #1a1a1a; font-weight: 700; font-size: 16px;
+  }
+  #installLater {
+    margin-top: 4px; padding: 8px 0; background: none; color: #888; font-size: 15px; font-weight: 400;
+  }
   </style>
 </head>
 <body>
 <canvas id="loadingCanvas" width="720" height="480"></canvas>
 <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+<div id="installBackdrop">
+  <div id="installCard" role="dialog" aria-labelledby="installTitle">
+    <div class="head"><img src="icon-192.png" alt=""><h2 id="installTitle">Installe le jeu</h2></div>
+    <p>Garde-le sur ton écran d'accueil, comme une vraie appli.</p>
+    <p id="installHowIos">iPhone (Safari)&nbsp;: touche <span class="key">⬆︎ Partager</span> puis «&nbsp;Sur l'écran d'accueil&nbsp;».</p>
+    <p id="installHowAndroid">Android (Chrome)&nbsp;: touche <span class="key">Installer</span> ci-dessous, ou le menu <span class="key">⋮</span> puis «&nbsp;Ajouter à l'écran d'accueil&nbsp;».</p>
+    <button type="button" id="installOk">Installer</button>
+    <button type="button" id="installLater">Plus tard</button>
+  </div>
+</div>
 <script>
   var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
   function drawLoadingText(text) {
@@ -88,7 +137,72 @@
   if (window.screen && screen.orientation && screen.orientation.addEventListener) {
     screen.orientation.addEventListener('change', settle);
   }
-  var applicationLoad = function () { fitCanvas(); Love(Module); };
+  var applicationLoad = function () { fitCanvas(); Love(Module); scheduleInstallCard(); };
+
+  // Installable app: service worker (network pass-through only).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      try { navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) {}
+    });
+  }
+
+  // "Install the app" help card (phones and tablets, not yet installed).
+  var deferredInstall = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredInstall = e;
+  });
+  function installDismissed() {
+    try { return !!localStorage.getItem('ttms-install-dismissed'); } catch (e) { return false; }
+  }
+  function setInstallDismissed() {
+    try { localStorage.setItem('ttms-install-dismissed', '1'); } catch (e) {}
+  }
+  function isInstalled() {
+    return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) ||
+      navigator.standalone === true;
+  }
+  function isTouchSmallDevice() {
+    var touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+    var short = Math.min(screen.width, screen.height);
+    return touch && short <= 900;
+  }
+  function isIos() {
+    var ua = navigator.userAgent || '';
+    return /iPhone|iPad|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1);
+  }
+  function scheduleInstallCard() {
+    if (isInstalled() || installDismissed() || !isTouchSmallDevice()) return;
+    setTimeout(showInstallCard, 1500);
+  }
+  function showInstallCard() {
+    if (isInstalled() || installDismissed()) return;
+    var backdrop = document.getElementById('installBackdrop');
+    var ios = isIos();
+    document.getElementById('installHowIos').style.display = ios ? '' : 'none';
+    document.getElementById('installHowAndroid').style.display = ios ? 'none' : '';
+    var ok = document.getElementById('installOk');
+    ok.textContent = ios ? "J'ai compris" : 'Installer';
+    function close() {
+      backdrop.classList.remove('open');
+      setInstallDismissed();
+    }
+    ok.onclick = function () {
+      if (!ios && deferredInstall) {
+        var ev = deferredInstall;
+        deferredInstall = null;
+        try { ev.prompt(); } catch (e) {}
+      }
+      close();
+    };
+    document.getElementById('installLater').onclick = close;
+    backdrop.onclick = function (e) { if (e.target === backdrop) close(); };
+    ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'click'].forEach(function (t) {
+      backdrop.addEventListener(t, function (e) { e.stopPropagation(); });
+    });
+    backdrop.classList.add('open');
+  }
 </script>
 <script src="game.js"></script>
 <script async src="love.js" onload="applicationLoad(this)"></script>

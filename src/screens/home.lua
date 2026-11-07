@@ -19,7 +19,7 @@ local function geom(app)
     g.chrono_y = 544
     g.CATS = { x = 30, y = 632, w = ui.W - 60, h = 54 }
     g.BTN = { x = 30, y = 706, w = ui.W - 60, h = 62 }
-    g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 30 }
+    g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 56 } -- big touch target
   else
     g.title_y = 24
     g.AREA = { x = 0, y = 142, w = ui.W, h = 164 }
@@ -28,7 +28,7 @@ local function geom(app)
     local bw = app.fonts.button:getWidth("Jouer") + 48
     g.BTN = { x = 690 - bw, y = 400, w = bw, h = 54 }
     g.CATS = { x = 30, y = 424, w = app.fonts.hint:getWidth("Mes catégories") + 32, h = 40 }
-    g.HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 24 }
+    g.HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 46 } -- big touch target
   end
   g.top = g.AREA.y + 8 -- first pill row
   return g
