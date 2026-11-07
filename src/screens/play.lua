@@ -36,9 +36,9 @@ function play.update(app, dt)
 end
 
 -- Geometry for the current layout mode, shared by drawing and hit tests:
--- BOX = word area, BACK = "‹ Retour" (top-left), PASS = "Passer" (bottom-centre).
--- Landscape: "Passer" fitted to its label and "‹ Retour" to its text (same placement
--- as the editor lists' back button), both shown after a touch only.
+-- BOX = word area, BACK = "‹ Retour" (top-left). There is no "Passer" button: on the web
+-- skipping is the same as next (swipe right), on the console X skips. Landscape: "‹ Retour"
+-- is fitted to its text (same placement as the editor lists' back button), after a touch only.
 local function layout(app)
   local g = {}
   if ui.portrait then
@@ -47,27 +47,22 @@ local function layout(app)
     g.BACK = { x = 10, y = 14, w = 10 + bf:getWidth("‹ Retour") + 10, h = 48 }
     g.top_y = 24 -- "‹ Retour" and timer line
     g.BOX = { x = 20, y = 120, w = ui.W - 40, h = 430 }
-    local pw = math.max(app.fonts.button:getWidth("Passer") + 48, 220)
-    g.PASS = { x = (ui.W - pw) / 2, y = 662, w = pw, h = 66 }
   else
     g.back_font = app.fonts.hint
     g.BACK = { x = 10, y = 10, w = 10 + app.fonts.hint:getWidth("‹ Retour") + 10, h = 44 }
     g.top_y = 24
     g.BOX = { x = 20, y = 90, w = 680, h = 300 }
-    local pw = app.fonts.button:getWidth("Passer") + 48
-    g.PASS = { x = (ui.W - pw) / 2, y = 424, w = pw, h = 44 }
   end
   return g
 end
 
--- Back and skip buttons: always in portrait, after a touch in landscape.
+-- Back button: always in portrait, after a touch in landscape.
 local function buttons(app) return ui.portrait or app.touched end
 
 function play.action(app, name, x, y)
   local g = layout(app)
   if name == "tap" then
     if buttons(app) and hit(g.BACK, x, y) then return play.action(app, "back") end
-    if buttons(app) and hit(g.PASS, x, y) then return play.action(app, "skip") end
     return play.action(app, "select")
   elseif locked(app) then
     if name == "back" then return play.action_back(app) end
@@ -128,7 +123,7 @@ function play.gesture(app, name, info)
   if name == "long_press" then
     local g = layout(app)
     if note or not app.round.word then return end
-    if buttons(app) and (hit(g.BACK, info.x, info.y) or hit(g.PASS, info.x, info.y)) then return end
+    if buttons(app) and hit(g.BACK, info.x, info.y) then return end
     app.note = new_note(app, "drop")
   elseif name == "drag_up" then
     if note then
@@ -157,7 +152,7 @@ end
 
 function play.draw(app)
   local g = layout(app)
-  local BOX, BACK, PASS = g.BOX, g.BACK, g.PASS
+  local BOX, BACK = g.BOX, g.BACK
   local r = app.round
   local uf = app.fonts.ui
   if ui.portrait then
@@ -222,11 +217,9 @@ function play.draw(app)
     end
   end
   if ui.portrait then
-    ui.printc(gesture_hint or "Touche : mot suivant", app.fonts.small, 0, 604, ui.W, "grey")
-    ui.button("Passer", app.fonts.button, PASS.x, PASS.y, PASS.w, PASS.h)
+    ui.printc(gesture_hint or "Touche : mot suivant", app.fonts.small, 0, 650, ui.W, "grey")
   elseif app.touched then
-    if gesture_hint then ui.printc(gesture_hint, app.fonts.hint, 0, 398, ui.W, "grey") end
-    ui.button("Passer", app.fonts.button, PASS.x, PASS.y, PASS.w, PASS.h)
+    if gesture_hint then ui.printc(gesture_hint, app.fonts.hint, 0, 436, ui.W, "grey") end
   else
     local hint = app.console and "A : suivant · X : passer · clapet : suivant"
       or gesture_hint or "Clic : suivant · P : passer"

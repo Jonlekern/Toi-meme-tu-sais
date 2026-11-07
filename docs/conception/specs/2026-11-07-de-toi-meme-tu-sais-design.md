@@ -97,8 +97,8 @@ maquette.
      sans jamais déborder de l'écran.
    - En haut à gauche, en petit : la catégorie du mot (« Soirée »…), rien pour un mot de `melange`.
    - En haut à droite, en rose : le temps restant, seulement si le chrono est actif.
-   - En bas, en petit : « A : suivant · X : passer · clapet : suivant ». Sur écran tactile, un
-     vrai bouton **Passer** à toucher à la place.
+   - En bas, en petit : « A : suivant · X : passer · clapet : suivant ». Sur le web il n'y a pas
+     de bouton Passer : passer = suivant (glisser à droite, ou touche P sur ordinateur).
 3. **Temps écoulé** (seulement avec chrono)
    - « Temps écoulé » en rose, bouton **Rejouer** (relance une manche avec les mêmes réglages).
 4. **Carré des règles** (par-dessus l'accueil), maquette validée le 7.11.2026 :
@@ -119,7 +119,7 @@ Pas de score à l'écran, pas de compteur, pas de liste des mots joués.
 | Se déplacer dans l'accueil | croix | flèches / souris | toucher |
 | Cocher / choisir | A | Entrée / clic | toucher |
 | Mot suivant | A, ou fermer puis rouvrir le clapet | Espace / Entrée / clic | toucher l'écran |
-| Passer le mot | X | touche P / bouton Passer | bouton Passer |
+| Passer le mot | X | touche P | glisser à droite (= suivant) |
 | Règles (accueil) | SELECT | touche ? ou clic sur « ? » | toucher « ? » |
 | Mes catégories (accueil) | Y | touche C / bouton | bouton « Mes catégories » |
 | Retour à l'accueil | B | Échap | bouton retour en haut à gauche |
@@ -261,8 +261,8 @@ statistiques, autres langues, applis iPhone et Android.
     passent à la ligne ; « Chrono » puis « aucun · 30 · 60 · 90 s » ; en bas deux boutons pleine
     largeur : « Mes catégories » (contour gris) puis « Jouer » (rose).
   - **Jeu** : « ‹ Retour » en haut à gauche, chrono en haut à droite, catégorie centrée en dessous ;
-    le mot en très grand au centre (jusqu'à 3 lignes) ; « Touche : mot suivant » en gris ; gros
-    bouton « Passer » rose en bas.
+    le mot en très grand au centre (jusqu'à 3 lignes) ; « Touche : mot suivant » en gris ; l'aide
+    (gris) est descendue vers le bas de l'écran. Pas de bouton « Passer » sur le web.
   - **Règles** : le carré prend presque toute la largeur ; « Touche pour fermer ».
   - Les autres écrans (temps écoulé, mes catégories, mots, saisie, confirmation) reprennent leur
     mise en page avec la largeur 480 (listes et boutons pleine largeur).
@@ -272,7 +272,7 @@ statistiques, autres langues, applis iPhone et Android.
 - Sur l'écran Jeu, hors console :
   - **Glisser à droite** : mot suivant (comme A / toucher). **Glisser à gauche** : revenir au mot
     précédent (historique de la manche ; rien s'il n'y en a pas). Le chrono repart du début dans les
-    deux cas. Le toucher simple et le bouton « Passer » restent.
+    deux cas. Le toucher simple reste. Le bouton « Passer » est supprimé sur le web (passer = suivant) ; la touche P reste sur ordinateur.
   - **Appui long** (~0,5 s sans bouger) : un **post-it rose** (`#F26EF2`, texte « Toi-même tu sais » en
     `#1a1a1a`, bande de scotch translucide en haut, légère rotation, ombre) tombe sur le mot et le
     cache, avec une petite animation de chute.
@@ -283,7 +283,7 @@ statistiques, autres langues, applis iPhone et Android.
     chrono continue.
   - Réglages retenus : glisser = au moins 60 px surtout à l'horizontale en moins de 0,6 s ; appui
     long = 0,5 s sans bouger de plus de 12 px ; le post-it se décolle au-delà de 35 % de sa hauteur
-    ou sur un coup rapide vers le haut. Tant qu'il est collé, « Passer » est bloqué aussi
+    ou sur un coup rapide vers le haut. Tant qu'il est collé, la touche P est bloquée aussi
     (rien ne change le mot) ; « ‹ Retour » marche. Quitter l'écran ou la fin du chrono l'enlève.
   - Revenir au mot précédent ne note rien dans les statistiques ; un mot revu est noté de nouveau
     quand il repart (sans effet en pratique : statistiques sur la console seulement). Après un
