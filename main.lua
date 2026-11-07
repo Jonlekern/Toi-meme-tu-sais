@@ -137,6 +137,7 @@ function love.load()
   local known = rebuild()
   app.settings = settings.parse(read_file("settings.txt"), known)
 
+  app.relayout(love.graphics.getDimensions())
   app.switch("home")
 
   -- Lid switch (RG SP): closing then reopening it = next word.
@@ -171,7 +172,22 @@ function love.update(dt)
   if current.update then current.update(app, dt) end
 end
 
+-- Window size changed (phone turned, window resized): pick the layout mode again;
+-- on a mode change, drop cached layouts (the round and deck are kept).
+function app.relayout(w, h)
+  if ui.setWindow(w, h) then
+    app.fit = nil
+    app.pill_scroll = 0
+  end
+end
+
+function love.resize(w, h)
+  app.relayout(w, h)
+end
+
 function love.draw()
+  -- some runtimes (web) can change the canvas size without a resize event
+  app.relayout(love.graphics.getDimensions())
   ui.begin()
   current.draw(app)
   ui.finish()

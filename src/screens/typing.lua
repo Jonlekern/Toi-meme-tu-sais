@@ -7,9 +7,11 @@ local typing = {}
 typing.wants_text = true
 
 local LINE_Y, KEYS_Y, KEY_H, KEY_STEP, UNIT = 138, 196, 46, 54, 66
-local X0, W = 30, 660
+local X0 = 30
 local BACK = { x = 10, y = 10, w = 100, h = 44 }
-local OKBTN = { x = 590, y = 10, w = 100, h = 44 }
+local OKBTN = { x = 590, y = 10, w = 100, h = 44 } -- x follows the screen width (layout)
+
+local function layout() OKBTN.x = ui.W - 130 end
 local MAX_LEN = 48
 local had_text_input -- state to restore on leave (desktop has it on by default)
 
@@ -81,6 +83,7 @@ function typing.action(app, name, x, y)
   elseif name == "erase" then
     return erase(t)
   elseif name == "tap" then
+    layout()
     if app.touched and hit(BACK, x, y) then return cancel(app) end
     if app.touched and hit(OKBTN, x, y) then return submit(app) end
     if not app.console then love.keyboard.setTextInput(true) end -- bring a dismissed phone keyboard back
@@ -138,7 +141,8 @@ local function draw_keys(app)
 end
 
 function typing.draw(app)
-  local t, f = app.typing, app.fonts.button
+  layout()
+  local t, f, W = app.typing, app.fonts.button, ui.W - 2 * X0
   local tx = 30
   if app.touched then
     local hf = app.fonts.hint
@@ -146,10 +150,20 @@ function typing.draw(app)
     ui.button("OK", app.fonts.button, OKBTN.x, OKBTN.y, OKBTN.w, OKBTN.h)
     tx = BACK.x + 10 + hf:getWidth("‹ Retour") + 20
   end
-  -- keep the title clear of the touch buttons: smaller font when it would run under "OK"
-  local tf = app.fonts.title
-  if app.touched and tf:getWidth(t.title) > OKBTN.x - 10 - tx then tf = app.fonts.head end
-  ui.print(t.title, tf, tx, tf == app.fonts.title and 24 or 29, "pink")
+  local tf, line_y = app.fonts.title, LINE_Y
+  if ui.portrait then
+    -- narrow screen: the title gets its own line under "‹ Retour" and "OK"
+    local ty = app.touched and 66 or 24
+    if tf:getWidth(t.title) > ui.W - 60 then tf = app.fonts.head end
+    if tf:getWidth(t.title) > ui.W - 60 then tf = app.fonts.button end
+    ui.print(t.title, tf, 30, ty, "pink")
+    line_y = ty + 114
+  else
+    -- keep the title clear of the touch buttons: smaller font when it would run under "OK"
+    if app.touched and tf:getWidth(t.title) > OKBTN.x - 10 - tx then tf = app.fonts.head end
+    ui.print(t.title, tf, tx, tf == app.fonts.title and 24 or 29, "pink")
+  end
+  local LINE_Y = line_y
 
   -- input line: show the end of the text if it is too wide
   local shown = t.text
@@ -163,11 +177,12 @@ function typing.draw(app)
   love.graphics.line(X0, LINE_Y, X0 + W, LINE_Y)
   if t.error then ui.print(t.error, app.fonts.ui, X0, LINE_Y + 10, "pink") end
 
-  if app.console then
+  -- the on-screen keyboard grid is laid out for the console's landscape screen only
+  if app.console and not ui.portrait then
     draw_keys(app)
-    ui.printc("A : lettre · X : effacer · START : OK", app.fonts.small, 0, 436, ui.W, "grey")
+    ui.printc("A : lettre · X : effacer · START : OK", app.fonts.small, 0, ui.H - 44, ui.W, "grey")
   elseif not app.touched then
-    ui.printc("Entrée : OK · Échap : annuler", app.fonts.small, 0, 436, ui.W, "grey")
+    ui.printc("Entrée : OK · Échap : annuler", app.fonts.small, 0, ui.H - 44, ui.W, "grey")
   end
 end
 

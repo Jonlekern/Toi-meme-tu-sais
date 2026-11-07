@@ -16,6 +16,7 @@ end
 local function layout(app)
   BTN.w = app.fonts.button:getWidth("Rejouer") + 48
   BTN.x = (ui.W - BTN.w) / 2
+  BTN.y = ui.H / 2 + 10
   BACK.w = 10 + app.fonts.hint:getWidth("‹ Retour") + 10
 end
 
@@ -37,11 +38,13 @@ function timeup.draw(app)
     local hf = app.fonts.hint
     ui.print("‹ Retour", hf, BACK.x + 10, 24 + (app.fonts.title:getHeight() - hf:getHeight()) / 2, "grey")
   end
-  ui.printc("Temps écoulé", app.fonts.title, 0, 120, ui.W, "pink")
+  local tf = app.fonts.title
+  if tf:getWidth("Temps écoulé") > ui.W - 40 then tf = app.fonts.head end -- one line on narrow screens
+  ui.printc("Temps écoulé", tf, 0, ui.H / 2 - 120, ui.W, "pink")
   ui.button("Rejouer", app.fonts.button, BTN.x, BTN.y, BTN.w, BTN.h, true)
   if not app.touched then
     local hint = app.console and "B : retour à l'accueil" or "Échap : retour à l'accueil"
-    ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey")
+    ui.printc(hint, app.fonts.small, 0, ui.H - 44, ui.W, "grey")
   end
 end
 

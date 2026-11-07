@@ -6,18 +6,43 @@ local home = {}
 
 local TIMERS = { 0, 30, 60, 90 }
 local PAD, GAP, ROW_H = 20, 12, 40
-local BTN = { x = 540, y = 400, w = 150, h = 54 } -- x/w recomputed from the label in layout_btn
-local CATS = { x = 30, y = 424, w = 190, h = 40 } -- touch-only "Mes catégories" button
-local AREA = { x = 0, y = 142, w = ui.W, h = 164 } -- scrolling pills area
-local CHRONO_Y = 330
-local HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 24 } -- "?" circle, top-right
+
+-- Screen geometry for the current layout mode (ui.portrait), shared by drawing and hit tests.
+-- BTN = "Jouer"; CATS = "Mes catégories" button (touch-only in landscape, always in portrait);
+-- AREA = scrolling pills area; HELP = "?" circle, top-right.
+local function geom(app)
+  local g = {}
+  if ui.portrait then
+    g.title_y = 76
+    g.AREA = { x = 0, y = 196, w = ui.W, h = 290 }
+    g.chrono_label_y = 510
+    g.chrono_y = 544
+    g.CATS = { x = 30, y = 632, w = ui.W - 60, h = 54 }
+    g.BTN = { x = 30, y = 706, w = ui.W - 60, h = 62 }
+    g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 30 }
+  else
+    g.title_y = 24
+    g.AREA = { x = 0, y = 142, w = ui.W, h = 164 }
+    g.chrono_y = 330
+    -- "Jouer" fitted to its label, right edge at 690
+    local bw = app.fonts.button:getWidth("Jouer") + 48
+    g.BTN = { x = 690 - bw, y = 400, w = bw, h = 54 }
+    g.CATS = { x = 30, y = 424, w = app.fonts.hint:getWidth("Mes catégories") + 32, h = 40 }
+    g.HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 24 }
+  end
+  g.top = g.AREA.y + 8 -- first pill row
+  return g
+end
+
+-- The "Mes catégories" button is always there in portrait, after a touch in landscape.
+local function cats_button(app) return ui.portrait or app.touched end
 
 -- Pill rectangles, computed from the fonts so draw and navigation agree.
-local function pills(app)
+local function pills(app, g)
   local font, out = app.fonts.ui, {}
-  local x, y = 30, 150
+  local x, y = 30, g.top
   for i, cat in ipairs(app.lists.categories) do
-    local w = font:getWidth(cat.label) + PAD * 2
+    local w = math.min(font:getWidth(cat.label) + PAD * 2, ui.W - 60)
     if x + w > ui.W - 30 and x > 30 then x, y = 30, y + ROW_H + GAP end
     out[i] = { x = x, y = y, w = w, h = ROW_H, cat = cat }
     x = x + w + GAP
@@ -26,21 +51,27 @@ local function pills(app)
 end
 
 -- Keep the focused pill inside the area; returns the current offset.
-local function follow(app, list, bottom)
+local function follow(app, g, list, bottom)
   local off = app.pill_scroll or 0
   local p = list[app.focus]
-  if p then off = scroll.follow(off, p.y - 150 - 6, p.y - 150 + p.h + 6, AREA.h - 8, bottom - 150) end
+  local top = g.top
+  if p then
+    off = scroll.follow(off, p.y - top - 6, p.y - top + p.h + 6, g.AREA.h - 8, bottom - top)
+  else -- keep the offset, only clamped (the area height changes with the orientation)
+    off = math.max(0, math.min(off, bottom - top - (g.AREA.h - 8)))
+  end
   app.pill_scroll = off
   return off
 end
 
-local function chrono_y(app) return CHRONO_Y end
-
 -- Timer line layout: parts with x positions; value parts carry their timer.
-local function chrono_layout(app)
-  local font, y = app.fonts.ui, chrono_y(app)
+-- Landscape: "Chrono : aucun · 30 · 60 · 90 s" on one line; portrait: the values only
+-- (the "Chrono" label is drawn above them).
+local function chrono_layout(app, g)
+  local font, y = app.fonts.ui, g.chrono_y
   local x = 30
-  local parts = { { text = "Chrono : ", color = "text" } }
+  local parts = {}
+  if not ui.portrait then parts[1] = { text = "Chrono : ", color = "text" } end
   for i, t in ipairs(TIMERS) do
     parts[#parts + 1] = { text = t == 0 and "aucun" or tostring(t), timer = t,
       color = app.settings.timer == t and "pink" or "grey" }
@@ -53,13 +84,6 @@ local function chrono_layout(app)
     total = total + p.w
   end
   return parts, x, y, total
-end
-
--- Fit the "Jouer" button to its label, keeping its right edge at 690.
-local function layout_btn(app)
-  BTN.w = app.fonts.button:getWidth("Jouer") + 48
-  BTN.x = 690 - BTN.w
-  CATS.w = app.fonts.hint:getWidth("Mes catégories") + 32
 end
 
 local function inside(r, x, y)
@@ -81,8 +105,9 @@ local function cycle(app, dir)
 end
 
 function home.action(app, name, x, y)
-  layout_btn(app)
-  local list = pills(app)
+  local g = geom(app)
+  local list = pills(app, g)
+  local AREA, BTN, CATS, HELP = g.AREA, g.BTN, g.CATS, g.HELP
   local n = #list
   local chrono, jouer = n + 1, n + 2
   -- the pill count can change (custom categories): keep the focus on something that exists
@@ -93,7 +118,7 @@ function home.action(app, name, x, y)
   elseif name == "mycats" then
     return app.switch("mycats")
   elseif name == "tap" then
-    if app.touched and inside(CATS, x, y) then return app.switch("mycats") end
+    if cats_button(app) and inside(CATS, x, y) then return app.switch("mycats") end
     local dx, dy = x - HELP.cx, y - HELP.cy
     if dx * dx + dy * dy <= HELP.hit * HELP.hit then return app.switch("rules") end
     local off = app.pill_scroll or 0
@@ -103,7 +128,7 @@ function home.action(app, name, x, y)
         return home.action(app, "select")
       end
     end
-    local parts, _, cy = chrono_layout(app)
+    local parts, _, cy = chrono_layout(app, g)
     local fh = app.fonts.ui:getHeight()
     for _, p in ipairs(parts) do
       if p.timer and inside({ x = p.x, y = cy - 6, w = p.w, h = fh + 12 }, x, y) then
@@ -154,35 +179,45 @@ function home.action(app, name, x, y)
   end
 end
 
+local function fit(font, text, w)
+  if font:getWidth(text) <= w then return text end
+  while #text > 1 and font:getWidth(text .. "…") > w do
+    text = text:gsub("[%z\1-\127\194-\244][\128-\191]*$", "")
+  end
+  return text .. "…"
+end
+
 function home.draw(app)
-  layout_btn(app)
-  local list = pills(app)
+  local g = geom(app)
+  local AREA, BTN, CATS, HELP = g.AREA, g.BTN, g.CATS, g.HELP
+  local list, bottom = pills(app, g)
   local n = #list
   app.focus = math.max(1, math.min(n + 2, app.focus or 1))
-  ui.print("Toi-même", app.fonts.title, 30, 24)
-  ui.print("tu sais", app.fonts.title, 30, 70, "pink")
+  ui.print("Toi-même", app.fonts.title, 30, g.title_y)
+  ui.print("tu sais", app.fonts.title, 30, g.title_y + 46, "pink")
 
-  local _, bottom = pills(app)
-  local off = follow(app, list, bottom)
+  local off = follow(app, g, list, bottom)
   ui.clip(AREA.x, AREA.y, AREA.w, AREA.h)
   for i, p in ipairs(list) do
     local on, py = app.settings.categories[p.cat.id], p.y - off
     ui.box(p.x, py, p.w, p.h, on and "pink" or nil, (not on) and "outline" or nil, app.focus == i)
-    ui.printc(p.cat.label, app.fonts.ui, p.x, py + (p.h - app.fonts.ui:getHeight()) / 2, p.w,
-      on and "bg" or "grey")
+    ui.printc(fit(app.fonts.ui, p.cat.label, p.w - 16), app.fonts.ui, p.x,
+      py + (p.h - app.fonts.ui:getHeight()) / 2, p.w, on and "bg" or "grey")
   end
   ui.unclip()
   ui.set("grey")
+  local at, ab = AREA.y, AREA.y + AREA.h
   if off > 0 then
-    love.graphics.polygon("fill", ui.W - 14, 128, ui.W - 8, 138, ui.W - 20, 138)
+    love.graphics.polygon("fill", ui.W - 14, at - 14, ui.W - 8, at - 4, ui.W - 20, at - 4)
   end
-  if off < bottom - 150 - (AREA.h - 8) then
-    love.graphics.polygon("fill", ui.W - 14, 316, ui.W - 8, 306, ui.W - 20, 306)
+  if off < bottom - g.top - (AREA.h - 8) then
+    love.graphics.polygon("fill", ui.W - 14, ab + 10, ui.W - 8, ab, ui.W - 20, ab)
   end
 
-  -- Timer line: "Chrono : aucun · 30 · 60 · 90 s"
+  -- Timer: "Chrono : aucun · 30 · 60 · 90 s" (portrait: "Chrono" above the values)
   local font = app.fonts.ui
-  local parts, x, y, total = chrono_layout(app)
+  local parts, x, y, total = chrono_layout(app, g)
+  if ui.portrait then ui.print("Chrono", font, 30, g.chrono_label_y, "text") end
   if app.focus == n + 1 then
     ui.box(x - 12, y - 6, total + 24, font:getHeight() + 12, nil, nil, true)
   end
@@ -190,12 +225,16 @@ function home.draw(app)
 
   -- "?" opens the rules
   ui.set("pink")
-  love.graphics.setLineWidth(1.5)
+  love.graphics.setLineWidth(ui.portrait and 2 or 1.5)
   love.graphics.circle("line", HELP.cx, HELP.cy, HELP.r)
-  ui.printc("?", app.fonts.small, HELP.cx - HELP.r, HELP.cy - app.fonts.small:getHeight() / 2,
-    HELP.r * 2, "pink")
+  local qf = ui.portrait and app.fonts.ui or app.fonts.small
+  ui.printc("?", qf, HELP.cx - HELP.r, HELP.cy - qf:getHeight() / 2, HELP.r * 2, "pink")
 
-  if app.touched then
+  if ui.portrait then
+    ui.box(CATS.x, CATS.y, CATS.w, CATS.h, nil, "outline")
+    ui.printc("Mes catégories", app.fonts.button, CATS.x,
+      CATS.y + (CATS.h - app.fonts.button:getHeight()) / 2, CATS.w, "grey")
+  elseif app.touched then
     ui.box(CATS.x, CATS.y, CATS.w, CATS.h, nil, "outline")
     ui.printc("Mes catégories", app.fonts.hint, CATS.x,
       CATS.y + (CATS.h - app.fonts.hint:getHeight()) / 2, CATS.w, "grey")

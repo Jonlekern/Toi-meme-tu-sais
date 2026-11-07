@@ -65,13 +65,29 @@
     Module.setStatus = function (text) { if (text) Module.printErr('[post-exception status] ' + text); };
   };
   // The canvas fills the viewport (no offset, so pointer coordinates match);
-  // the game letterboxes its own 3:2 screen.
+  // the game letterboxes its own screen: 720x480, or 480x800 when the viewport
+  // is taller than wide. The runtime reads the canvas CSS size on each window
+  // resize event and passes the new size to the game (love.resize).
   function fitCanvas() {
     var c = document.getElementById('canvas');
     c.width = window.innerWidth;
     c.height = window.innerHeight;
   }
   window.addEventListener('resize', fitCanvas);
+  // Some phones report the new viewport only after the rotation has finished:
+  // send one more resize event once it has settled.
+  var settleTimer = null;
+  function settle() {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(function () {
+      fitCanvas();
+      window.dispatchEvent(new Event('resize'));
+    }, 250);
+  }
+  window.addEventListener('orientationchange', settle);
+  if (window.screen && screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener('change', settle);
+  }
   var applicationLoad = function () { fitCanvas(); Love(Module); };
 </script>
 <script src="game.js"></script>

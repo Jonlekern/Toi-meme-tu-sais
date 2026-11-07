@@ -1,7 +1,8 @@
--- Shared drawing helpers: 720x480 logical screen scaled to the window.
+-- Shared drawing helpers: logical screen scaled to the window, 720x480
+-- ("landscape") or 480x800 when the window is taller than wide ("portrait").
 local ui = {}
 
-ui.W, ui.H = 720, 480
+ui.W, ui.H, ui.portrait = 720, 480, false
 
 local function hex(r, g, b) return { r / 255, g / 255, b / 255 } end
 ui.color = {
@@ -15,6 +16,23 @@ ui.color = {
 }
 
 local scale, ox, oy = 1, 0, 0
+local known -- whether setWindow ran yet
+
+-- Logical size and mode for a window size. Pure.
+function ui.mode(w, h)
+  if h > w then return 480, 800, true end
+  return 720, 480, false
+end
+
+-- Pick the layout mode for the window size; returns true when the mode changed.
+function ui.setWindow(w, h)
+  local lw, lh, portrait = ui.mode(w, h)
+  local changed = not known or portrait ~= ui.portrait
+  known = true
+  ui.W, ui.H, ui.portrait = lw, lh, portrait
+  ui.layout(w, h)
+  return changed
+end
 
 function ui.layout(w, h)
   scale = math.min(w / ui.W, h / ui.H)

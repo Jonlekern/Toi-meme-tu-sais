@@ -3,7 +3,16 @@ local ui = require("ui")
 
 local lv = {}
 
-local X, W, TOP, ROW, STEP, VIS = 30, 660, 96, 44, 50, 6
+local ROW, STEP = 44, 50
+local X, TOP = 30, 96
+
+-- Full-width rows; as many visible rows as fit above the hint line
+-- (6 on the 720x480 screen, 12 on the 480x800 one, where the title gets its own line).
+local function sync()
+  if ui.portrait then X, TOP = 16, 132 else X, TOP = 30, 96 end
+end
+local function width() return ui.W - 2 * X end
+local function vis() return math.floor((ui.H - 60 - TOP + STEP - ROW) / STEP) end
 local BACK = { x = 10, y = 10, w = 100, h = 44 }
 
 local function hit(r, x, y)
@@ -13,6 +22,8 @@ end
 function lv.new() return { sel = 1, scroll = 0 } end
 
 function lv.clamp(st, n)
+  sync()
+  local VIS = vis()
   st.sel = math.max(1, math.min(n, st.sel))
   if st.sel <= st.scroll then st.scroll = st.sel - 1 end
   if st.sel > st.scroll + VIS then st.scroll = st.sel - VIS end
@@ -28,6 +39,8 @@ function lv.nav(st, name, n)
 end
 
 function lv.row_at(st, x, y, n)
+  sync()
+  local W, VIS = width(), vis()
   if x < X or x > X + W or y < TOP then return nil end
   local i = math.floor((y - TOP) / STEP) + 1
   if i > VIS or (y - TOP) - (i - 1) * STEP > ROW then return nil end
@@ -36,6 +49,8 @@ function lv.row_at(st, x, y, n)
 end
 
 local function del_rect(st)
+  sync()
+  local W = width()
   return { x = X + W - 168, y = TOP + (st.sel - st.scroll - 1) * STEP + 4, w = 160, h = ROW - 8 }
 end
 
@@ -52,16 +67,22 @@ end
 
 -- items: { {left, right, accent, add} }; hint: string or list of variants; deletable(idx) says whether the touch delete button applies.
 function lv.draw(app, title, items, st, hint, deletable)
-  local f = app.fonts.ui
+  lv.clamp(st, #items) -- the visible row count changes with the screen orientation
+  local f, W, VIS = app.fonts.ui, width(), vis()
   local tx = 30
   if app.touched then
     local hf = app.fonts.hint
     ui.print("‹ Retour", hf, BACK.x + 10, 24 + (app.fonts.title:getHeight() - hf:getHeight()) / 2, "grey")
     tx = BACK.x + 10 + hf:getWidth("‹ Retour") + 20
   end
+  local ty = 24
+  if ui.portrait then -- the title gets its own line under "‹ Retour"
+    tx, ty = 30, app.touched and 66 or 24
+  end
   local tf = app.fonts.title
   if tf:getWidth(title) > ui.W - tx - 30 then tf = app.fonts.head end
-  ui.print(fit(tf, title, ui.W - tx - 30), tf, tx, 24, "pink")
+  if ui.portrait and tf:getWidth(title) > ui.W - tx - 30 then tf = app.fonts.button end
+  ui.print(fit(tf, title, ui.W - tx - 30), tf, tx, ty, "pink")
 
   for i = 1, VIS do
     local idx, it = st.scroll + i, items[st.scroll + i]
@@ -93,15 +114,20 @@ function lv.draw(app, title, items, st, hint, deletable)
       love.graphics.line(cx, cy - s / 2, cx, cy + s / 2)
       lx, room = lx + f:getHeight() * 1.1, room - f:getHeight() * 1.1
     end
-    ui.print(fit(f, left, room), f, lx, fy, col)
+    local lf = f
+    if ui.portrait and f:getWidth(left) > room then -- narrow screen: smaller text before cutting it
+      lf = app.fonts.small
+    end
+    ui.print(fit(lf, left, room), lf, lx, y + (ROW - lf:getHeight()) / 2, col)
   end
 
   ui.set("grey")
   if st.scroll > 0 then
-    love.graphics.polygon("fill", ui.W - 14, 72, ui.W - 8, 82, ui.W - 20, 82)
+    love.graphics.polygon("fill", ui.W - 14, TOP - 24, ui.W - 8, TOP - 14, ui.W - 20, TOP - 14)
   end
   if st.scroll + VIS < #items then
-    love.graphics.polygon("fill", ui.W - 14, 430, ui.W - 8, 420, ui.W - 20, 420)
+    local by = ui.H - 50
+    love.graphics.polygon("fill", ui.W - 14, by, ui.W - 8, by - 10, ui.W - 20, by - 10)
   end
   if hint and not app.touched then
     -- one line only: hint is a string or a list of variants, longest first;
@@ -112,7 +138,7 @@ function lv.draw(app, title, items, st, hint, deletable)
       if app.fonts.small:getWidth(v) <= ui.W - 40 then text, hf = v, app.fonts.small break end
       if app.fonts.hint:getWidth(v) <= ui.W - 40 then text, hf = v, app.fonts.hint break end
     end
-    ui.printc(text, hf, 0, 436 + (app.fonts.small:getHeight() - hf:getHeight()) / 2, ui.W, "grey")
+    ui.printc(text, hf, 0, ui.H - 44 + (app.fonts.small:getHeight() - hf:getHeight()) / 2, ui.W, "grey")
   end
 end
 
