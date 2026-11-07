@@ -90,7 +90,9 @@ function play.draw(app)
   if app.touched then
     ui.button("Passer", app.fonts.button, PASS.x, PASS.y, PASS.w, PASS.h)
   else
-    ui.printc("A : suivant · X : passer · clapet : suivant", app.fonts.small, 0, 436, ui.W, "grey")
+    local hint = app.console and "A : suivant · X : passer · clapet : suivant"
+      or "Clic : suivant · P : passer"
+    ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey")
   end
 end
 

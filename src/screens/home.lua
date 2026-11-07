@@ -200,6 +200,7 @@ function home.draw(app)
     local hf, room = app.fonts.hint, BTN.x - 30 - 20
     local hint = "SELECT : règles · Y : mes catégories"
     if hf:getWidth(hint) > room then hint = "SELECT : règles · Y : catégories" end
+    if not app.console then hint = "? : règles · C : catégories" end
     ui.print(hint, hf, 30, BTN.y + (BTN.h - hf:getHeight()) / 2, "grey")
   end
 

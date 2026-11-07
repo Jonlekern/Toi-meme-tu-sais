@@ -9,15 +9,14 @@
   body { display: flex; align-items: center; justify-content: center; }
   #canvas, #loadingCanvas {
     display: block; background: #1a1a1a; outline: none;
-    width: min(100vw, 150vh); height: min(66.667vw, 100vh);
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     touch-action: none; -webkit-user-select: none; user-select: none;
   }
-  #loadingCanvas { position: absolute; }
-</style>
+  </style>
 </head>
 <body>
 <canvas id="loadingCanvas" width="720" height="480"></canvas>
-<canvas id="canvas" width="720" height="480" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+<canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 <script>
   var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
   function drawLoadingText(text) {
@@ -62,7 +61,15 @@
   window.onerror = function () {
     Module.setStatus = function (text) { if (text) Module.printErr('[post-exception status] ' + text); };
   };
-  var applicationLoad = function () { Love(Module); };
+  // The canvas fills the viewport (no offset, so pointer coordinates match);
+  // the game letterboxes its own 3:2 screen.
+  function fitCanvas() {
+    var c = document.getElementById('canvas');
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+  }
+  window.addEventListener('resize', fitCanvas);
+  var applicationLoad = function () { fitCanvas(); Love(Module); };
 </script>
 <script src="game.js"></script>
 <script async src="love.js" onload="applicationLoad(this)"></script>
