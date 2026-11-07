@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>De toi-même tu sais</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1a1a1a; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  #canvas, #loadingCanvas {
+    display: block; background: #1a1a1a; outline: none;
+    width: min(100vw, 150vh); height: min(66.667vw, 100vh);
+    touch-action: none; -webkit-user-select: none; user-select: none;
+  }
+  #loadingCanvas { position: absolute; }
+</style>
+</head>
+<body>
+<canvas id="loadingCanvas" width="720" height="480"></canvas>
+<canvas id="canvas" width="720" height="480" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+<script>
+  var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
+  function drawLoadingText(text) {
+    loadingContext.fillStyle = '#1a1a1a';
+    loadingContext.fillRect(0, 0, 720, 480);
+    loadingContext.font = '24px sans-serif';
+    loadingContext.textAlign = 'center';
+    loadingContext.fillStyle = '#888888';
+    loadingContext.fillText('…', 360, 240);
+  }
+  window.onload = function () { window.focus(); };
+  window.onclick = function () { window.focus(); };
+  window.addEventListener('keydown', function (e) {
+    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
+  }, false);
+
+  var Module = {
+    arguments: ['./game.love'],
+    INITIAL_MEMORY: 16777216,
+    printErr: console.error.bind(console),
+    canvas: (function () {
+      var canvas = document.getElementById('canvas');
+      canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); }, false);
+      return canvas;
+    })(),
+    setStatus: function (text) {
+      if (text) {
+        drawLoadingText(text);
+      } else if (Module.remainingDependencies === 0) {
+        document.getElementById('loadingCanvas').style.display = 'none';
+      }
+    },
+    totalDependencies: 0,
+    remainingDependencies: 0,
+    monitorRunDependencies: function (left) {
+      this.remainingDependencies = left;
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing' : '');
+    }
+  };
+  Module.setStatus('Downloading');
+  window.onerror = function () {
+    Module.setStatus = function (text) { if (text) Module.printErr('[post-exception status] ' + text); };
+  };
+  var applicationLoad = function () { Love(Module); };
+</script>
+<script src="game.js"></script>
+<script async src="love.js" onload="applicationLoad(this)"></script>
+</body>
+</html>

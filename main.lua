@@ -88,6 +88,12 @@ function app.startRound()
   app.switch("play")
 end
 
+-- Missing files must give nil (the web runtime raises an error instead).
+local function read_file(path)
+  if not love.filesystem.getInfo(path, "file") then return nil end
+  return (love.filesystem.read(path))
+end
+
 function love.load()
   app.console = love.system.getOS() == "Linux"
   love.graphics.setBackgroundColor(ui.color.bg)
@@ -108,12 +114,12 @@ function love.load()
     end,
   }
 
-  app.lists = words.load(function(p) return love.filesystem.read(p) end)
+  app.lists = words.load(read_file)
   app.builtin = app.lists.categories
-  app.custom = custom.parse(love.filesystem.read("mes-mots.txt"))
+  app.custom = custom.parse(read_file("mes-mots.txt"))
   app.ed = { cats = listview.new(), words = listview.new(), cat = 1 }
   local known = rebuild()
-  app.settings = settings.parse(love.filesystem.read("settings.txt"), known)
+  app.settings = settings.parse(read_file("settings.txt"), known)
 
   app.switch("home")
 
