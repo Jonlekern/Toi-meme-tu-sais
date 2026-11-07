@@ -267,3 +267,18 @@ statistiques, autres langues, applis iPhone et Android.
   - Les autres écrans (temps écoulé, mes catégories, mots, saisie, confirmation) reprennent leur
     mise en page avec la largeur 480 (listes et boutons pleine largeur).
 - Passer d'un format à l'autre (tourner le téléphone) refait la mise en page sans perdre la partie.
+
+### 14.3 Gestes (version web seulement, validés le 7.11.2026)
+- Sur l'écran Jeu, hors console :
+  - **Glisser à droite** : mot suivant (comme A / toucher). **Glisser à gauche** : revenir au mot
+    précédent (historique de la manche ; rien s'il n'y en a pas). Le chrono repart du début dans les
+    deux cas. Le toucher simple et le bouton « Passer » restent.
+  - **Appui long** (~0,5 s sans bouger) : un **post-it rose** (`#F26EF2`, texte « Toi-même tu sais » en
+    `#1a1a1a`, bande de scotch translucide en haut, légère rotation, ombre) tombe sur le mot et le
+    cache, avec une petite animation de chute.
+  - **Décoller** : on pose le doigt sur le post-it et on glisse vers le haut. **Le coin du côté où le
+    doigt a commencé (gauche ou droite) se soulève** et se replie en suivant le doigt ; au-delà d'un
+    seuil, le post-it se décolle complètement et s'envole vers le haut ; sinon il se recolle.
+  - Tant qu'il est collé, le post-it bloque le glisser gauche/droite et le toucher « suivant » ; le
+    chrono continue.
+- Sur la console, rien ne change.
