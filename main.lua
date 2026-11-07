@@ -29,13 +29,20 @@ local inp = input.new()
 local lidTracker = lid.tracker()
 local lidChannel
 
+-- A tap that just switched screens must not also land on the new screen
+-- (one finger can arrive as a touch and then as a mouse click).
+local SWITCH_GUARD = 0.25
+
 local function dispatch(name, x, y)
-  if name then current.action(app, name, x, y) end
+  if not name then return end
+  if name == "tap" and app.switched_at and love.timer.getTime() - app.switched_at < SWITCH_GUARD then return end
+  current.action(app, name, x, y)
 end
 
 function app.switch(name)
   if current and current.leave then current.leave(app) end
   current = screens[name]
+  app.switched_at = love.timer.getTime()
   current.enter(app)
 end
 

@@ -15,7 +15,10 @@ local PAD = {
   back = "rules", start = "ok",
 }
 
-local DOUBLE_WINDOW = 0.3
+-- One finger can also arrive as a mouse click, flagged as touch or not
+-- depending on the runtime (the web one does not): ignore mouse presses
+-- that follow a touch this closely.
+local DOUBLE_WINDOW = 0.5
 
 function input.new()
   return setmetatable({ lastTouch = nil }, input)
@@ -39,9 +42,9 @@ function input:touch(x, y, t)
   return "tap", x, y
 end
 
-function input:mouse(x, y, button, istouch, t)
+function input:mouse(x, y, button, _istouch, t)
   if button ~= 1 then return nil end
-  if istouch and self.lastTouch and t - self.lastTouch < DOUBLE_WINDOW then
+  if self.lastTouch and t - self.lastTouch < DOUBLE_WINDOW then
     return nil
   end
   return "tap", x, y

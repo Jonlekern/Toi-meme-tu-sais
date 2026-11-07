@@ -38,6 +38,8 @@ return {
     local a, x, y = i:touch(10, 20, 5.00)
     T.eq(a, "tap"); T.eq(x, 10); T.eq(y, 20)
     T.eq(i:mouse(10, 10, 1, true, 5.01), nil)
+    T.eq(i:mouse(10, 10, 1, false, 5.05), nil) -- runtime did not flag it as touch
+    T.eq(i:mouse(10, 10, 1, false, 5.45), nil)
     T.eq(i:mouse(10, 10, 1, false, 6), "tap")
   end,
 
