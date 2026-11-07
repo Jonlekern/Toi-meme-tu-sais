@@ -3,6 +3,7 @@ love.filesystem.setRequirePath("src/?.lua;src/?/init.lua;" .. love.filesystem.ge
 local words = require("words")
 local settings = require("settings")
 local deck = require("deck")
+local seen = require("seen")
 local round = require("round")
 local ui = require("ui")
 local input = require("input")
@@ -112,13 +113,26 @@ function app.confirmThen(from, yes)
   app.switch("confirm")
 end
 
+-- Missing files must give nil (the web runtime raises an error instead).
+local function read_file(path)
+  if not love.filesystem.getInfo(path, "file") then return nil end
+  return (love.filesystem.read(path))
+end
+
 -- The deck lives across rounds so no word repeats before its bag is empty;
 -- it is rebuilt only on first play, when the ticked categories change, or
 -- after the custom categories changed (app.customChanged clears it).
 function app.startRound()
+  if not app.seen then
+    app.seen = seen.parse(read_file("vus.txt"))
+    app.seen.on_change = function(s)
+      local ok, err = pcall(love.filesystem.write, "vus.txt", s:serialize())
+      if not ok then print("vus: " .. tostring(err)) end
+    end
+  end
   local sig = deck.signature(app.settings.categories)
   if not app.deck or app.deckSig ~= sig then
-    app.deck = deck.new(app.lists, app.settings.categories, love.math.random)
+    app.deck = deck.new(app.lists, app.settings.categories, love.math.random, app.seen)
     app.deckSig = sig
   end
   local on_done
@@ -133,11 +147,6 @@ function app.startRound()
   app.switch("play")
 end
 
--- Missing files must give nil (the web runtime raises an error instead).
-local function read_file(path)
-  if not love.filesystem.getInfo(path, "file") then return nil end
-  return (love.filesystem.read(path))
-end
 
 -- A failing lid thread must never take the game down.
 function love.threaderror(t, e)

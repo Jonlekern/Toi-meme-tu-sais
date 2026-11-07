@@ -64,6 +64,12 @@ Fichiers texte dans `words/`, encodés en UTF-8, **un mot ou une expression par 
   vide, il est remélangé, en évitant que le premier mot soit celui qui vient de sortir.
 - Un mot présent dans deux listes (par exemple `melange` et `soiree`) peut sortir de chaque paquet.
 - Changer les catégories cochées recrée les paquets.
+- **Mémoire des mots déjà vus (ajout du 7.11.2026)** : le jeu retient, d'une partie et d'un lancement
+  à l'autre, les mots déjà affichés (fichier `vus.txt` dans le dossier de sauvegarde ; stockage du
+  navigateur sur le web). Quand une pile est (re)construite, les mots pas encore vus passent d'abord,
+  mélangés ; les mots déjà vus ne reviennent qu'une fois tous les autres passés. Quand tous les mots
+  d'une pile ont été vus, sa mémoire repart de zéro. Fichier absent ou abîmé : on repart de zéro.
+
 
 ## 4. Les écrans
 

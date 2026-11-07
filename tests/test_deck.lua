@@ -147,4 +147,39 @@ return {
       end
     end
   end,
+
+  test_seen_words_come_last = function()
+    local s = require("seen").new()
+    local words = {}
+    for i = 1, 10 do words[i] = "w" .. i end
+    for i = 1, 6 do s:mark(words[i]) end
+    local bag = deck.bag(words, seed(), s, function(x) return x end)
+    local first = {}
+    for _ = 1, 4 do first[bag:draw()] = true end
+    for i = 7, 10 do T.ok(first[words[i]], "unseen " .. words[i] .. " not first") end
+  end,
+
+  test_seen_memory_cleared_when_pile_done = function()
+    local s = require("seen").new()
+    local d = deck.new({ melange = { "a", "b", "c" } }, {}, seed(), s)
+    s:mark("zz") -- unrelated word stays remembered
+    for _ = 1, 2 do d:next() end
+    T.ok(s:has("zz"))
+    local n = 0
+    for _ in pairs(s.set) do n = n + 1 end
+    T.eq(n, 3)
+    d:next()
+    T.ok(not s:has("a") and not s:has("b") and not s:has("c"), "pile memory kept")
+    T.ok(s:has("zz"))
+  end,
+
+  test_seen_pool_uses_word_text = function()
+    local s = require("seen").new()
+    s:mark("s1") s:mark("s2") s:mark("s3")
+    local l = lists()
+    l.melange = nil
+    local d = deck.new(l, { soiree = true }, seed(), s)
+    local w = d:next()
+    T.eq(w, "s4")
+  end,
 }
