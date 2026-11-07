@@ -232,3 +232,30 @@ permet de les tester seuls.
 Score, équipes, sons, fleur ou logo (en attente d'une maquette), modifier les 6 catégories de base,
 partager ses catégories entre appareils, statistiques sur le web, calcul et affichage des
 statistiques, autres langues, applis iPhone et Android.
+
+## 14. Ajouts du 7.11.2026 (validés par Johnny)
+
+### 14.1 Nom et logo
+- Le jeu s'appelle **« Toi-même tu sais »** (et non « De toi-même tu sais ») : titre de l'accueil
+  (« Toi-même » sur la ligne 1, « tu sais » en rose sur la ligne 2), fenêtre, page web, lanceur
+  console (`Toi-meme tu sais.sh`), README.
+- Logo validé : carré arrondi `#1a1a1a`, « Toi-même » en blanc (Calebard), bulle de dialogue rose
+  `#F26EF2` avec « tu sais » en `#1a1a1a` (Clebard Tall), sans fleur. Fichiers `assets/logo/`
+  (1024, 512, 192, 180, 32 px). Utilisé comme icône de la page web (favicon + icône d'écran d'accueil),
+  icône de la fenêtre LÖVE et en haut du README.
+
+### 14.2 Format téléphone (web)
+- Quand la fenêtre est plus haute que large (téléphone tenu debout), le jeu passe en **mise en page
+  debout** : écran logique 480×800 au lieu de 720×480. Sinon (console, ordi, téléphone couché) rien
+  ne change.
+- Maquette validée :
+  - **Accueil** : « ? » en haut à droite ; titre sur deux lignes ; pastilles des catégories qui
+    passent à la ligne ; « Chrono » puis « aucun · 30 · 60 · 90 s » ; en bas deux boutons pleine
+    largeur : « Mes catégories » (contour gris) puis « Jouer » (rose).
+  - **Jeu** : « ‹ Retour » en haut à gauche, chrono en haut à droite, catégorie centrée en dessous ;
+    le mot en très grand au centre (jusqu'à 3 lignes) ; « Touche : mot suivant » en gris ; gros
+    bouton « Passer » rose en bas.
+  - **Règles** : le carré prend presque toute la largeur ; « Touche pour fermer ».
+  - Les autres écrans (temps écoulé, mes catégories, mots, saisie, confirmation) reprennent leur
+    mise en page avec la largeur 480 (listes et boutons pleine largeur).
+- Passer d'un format à l'autre (tourner le téléphone) refait la mise en page sans perdre la partie.
