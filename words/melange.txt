@@ -16,7 +16,7 @@ Sac de sport
 Jogging
 Baskets
 Pantoufles
-Pull moche
+Pull
 Doudoune
 Bonnet
 Écharpe
@@ -24,15 +24,15 @@ Gants
 Maillot de bain
 Tong
 Casquette
-Ceinture en cuir
-Jean troué
+Ceinture
+Jean
 Chemise
 Cravate
 Robe
 Talons
 Manteau
 Capuche
-Pyjama à pois
+Pyjama
 Doudou
 Peluche
 Poster
@@ -46,20 +46,20 @@ Enveloppe
 Lettre
 Facture
 Rappel
-Amende de parking
+Amende
 Impôts
 Banque
 Bancomat
 Monnaie
 Pièce de monnaie
-Billet de vingt
+Billet
 Tirelire
 Soldes
 Ticket de caisse
 Caddie
 Sac plastique
 Caisse
-Rayon surgelés
+Surgelés
 Liste de courses
 Marché
 Boulangerie
@@ -100,7 +100,6 @@ Mème
 Série
 Film d'horreur
 Cinéma
-Séance de ciné
 Salle d'arcade
 Console
 Manette
@@ -126,12 +125,12 @@ Serviette de plage
 Château de sable
 Glace à l'eau
 Bateau à pédales
-Barbecue au lac
+Barbecue
 Feu de camp
 Guitare
 Piano
 Batterie
-Festival de rue
+Festival
 Fête foraine
 Grande roue
 Barbe à papa
@@ -161,7 +160,6 @@ Couche
 Tétine
 Crèche
 Berceuse
-Doudou perdu
 Chien
 Chat
 Laisse
@@ -212,14 +210,12 @@ Carte routière
 Boussole
 Appareil photo
 Trépied
-Vacances au bord
+Vacances
 Hôtel
 Auberge de jeunesse
-Chambre double
 Réception
-Clé de chambre
-Petit-déj buffet
-Piscine d'hôtel
+Clé
+Petit-déj
 Souvenir
 Bronzage
 Moustique
@@ -229,10 +225,10 @@ Araignée
 Mouche
 Cafard
 Souris
-Cave humide
+Cave
 Fuite d'eau
 Panne de courant
-Bougie d'urgence
+Bougie
 Plombier
 Électricien
 Serrurier
@@ -278,10 +274,10 @@ Mot de passe
 Antivirus
 Mise à jour
 Écran bleu
-Imprimante en panne
+Imprimante
 Scanner
 Livre
-Bibliothèque municipale
+Bibliothèque
 Journal
 Magazine
 BD
@@ -345,12 +341,11 @@ Verre cassé
 Nappe
 Serviette en papier
 Bougeoir
-Table de fête
 Chaises pliantes
 Terrasse
 Parasol
-Hamburger maison
-Sauce salade
+Hamburger
+Vinaigrette
 Vinaigre
 Huile d'olive
 Sel
@@ -371,7 +366,7 @@ Cerise
 Chewing-gum
 Bonbon
 Sucette
-Nounours gélifié
+Bonbons
 Barre chocolatée
 Sirop de grenadine
 Thé froid
@@ -381,36 +376,35 @@ Boîte de conserve
 Ravioli
 Soupe en sachet
 Nouilles instantanées
-Plat surgelé
-Micro-onde cassé
+Plat préparé
+Micro-ondes
 Poubelle pleine
 Tri des déchets
 Sac poubelle
-Verre usagé
+Bouteille vide
 Déchetterie
 Recyclage
-Vélo volé
+Vélo
 Casque de vélo
-Embouteillage matinal
+Embouteillage
 Chauffeur de bus
 Carte journalière
-Retard de bus
+Retard
 Aller-retour
-Siège côté fenêtre
+Côté fenêtre
 Valise perdue
 Contrôle de sécurité
 Salle d'attente
 Cabinet médical
 Radiographie
-Thermomètre cassé
-Tisane de grand-mère
+Thermomètre
 Sommeil
 Ronflement
 Cauchemar
 Rêve
 Somnambule
-Café du matin
-Retard au réveil
+Café
+Panne de réveil
 Snooze
 Bâillement
 Hoquet
@@ -429,50 +423,50 @@ Merci
 Surprise-partie
 Invitation
 Liste d'invités
-Retard de copain
+Attendre un pote
 Rendez-vous
-Rendez-vous raté
+Poser un lapin
 Lapin
 Attente
 File d'attente
-Numéro d'attente
+Ticket
 Guichet
 Formulaire
 Tampon
 Signature
-Passeport expiré
+Passeport
 Carte d'identité
 Photo d'identité
 Permis de conduire
 Assurance
-Abonnement de salle
+Abonnement
 Bonne résolution
-Régime de lundi
-Balance cassée
+Régime
+Balance
 Miroir
 Coup de fil
-Sonnerie bizarre
-Karaoké de famille
+Sonnerie
+Karaoké
 Chanson du moment
 Tube de l'été
-Danse ridicule
+Danse
 Costume
 Masque de carnaval
 Serpentin
-Maquillage de clown
+Clown
 Cirque
 Zoo
 Musée
 Visite guidée
 Audioguide
-Boutique de souvenirs
+Souvenirs
 Cathédrale
 Château
 Vieille ville
-Bord du lac
+Lac
 Pont
 Rivière
-Quai du lac
+Quai
 Île
 Vignes
 Cave à vin
