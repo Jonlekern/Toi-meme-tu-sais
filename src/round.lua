@@ -34,10 +34,9 @@ function round:advance(result)
   self:report(result)
   self.word, self.category = self.deck:next()
   if self.word then self.shown = { word = self.word, category = self.category } end
-  if not self.started then
-    self.started = true
-    if self.seconds > 0 then self.remaining = self.seconds end
-  end
+  self.started = true
+  -- The timer is per word: every new word restarts it from the full duration.
+  if self.seconds > 0 then self.remaining = self.seconds end
 end
 
 function round:next() self:advance("suivant") end

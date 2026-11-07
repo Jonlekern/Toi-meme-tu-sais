@@ -136,7 +136,9 @@ Pas de score à l'écran, pas de compteur, pas de liste des mots joués.
 ## 6. Le chrono (option)
 
 - Réglé dans l'accueil : aucun (par défaut), 30, 60 ou 90 secondes.
-- Démarre au premier mot affiché. À zéro : écran « Temps écoulé ».
+- Le chrono compte **par mot** : il démarre au premier mot et repart de zéro à chaque nouveau mot
+  (suivant, passer ou clapet). À zéro : écran « Temps écoulé » ; « Rejouer » affiche un nouveau
+  mot avec un chrono neuf (la pioche continue).
 - Aucun son en v1.
 
 ## 7. Mémoire des réglages
