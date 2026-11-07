@@ -50,7 +50,7 @@ local function fit(font, text, w)
   return text .. "…"
 end
 
--- items: { {left, right, accent, add} }; deletable(idx) says whether the touch delete button applies.
+-- items: { {left, right, accent, add} }; hint: string or list of variants; deletable(idx) says whether the touch delete button applies.
 function lv.draw(app, title, items, st, hint, deletable)
   local f = app.fonts.ui
   local tx = 30
@@ -103,7 +103,17 @@ function lv.draw(app, title, items, st, hint, deletable)
   if st.scroll + VIS < #items then
     love.graphics.polygon("fill", ui.W - 14, 430, ui.W - 8, 420, ui.W - 20, 420)
   end
-  if hint and not app.touched then ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey") end
+  if hint and not app.touched then
+    -- one line only: hint is a string or a list of variants, longest first;
+    -- the first variant that fits wins, in the normal font, else the smaller one
+    local variants = type(hint) == "table" and hint or { hint }
+    local text, hf = variants[#variants], app.fonts.hint
+    for _, v in ipairs(variants) do
+      if app.fonts.small:getWidth(v) <= ui.W - 40 then text, hf = v, app.fonts.small break end
+      if app.fonts.hint:getWidth(v) <= ui.W - 40 then text, hf = v, app.fonts.hint break end
+    end
+    ui.printc(text, hf, 0, 436 + (app.fonts.small:getHeight() - hf:getHeight()) / 2, ui.W, "grey")
+  end
 end
 
 return lv

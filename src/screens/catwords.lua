@@ -57,7 +57,8 @@ function catwords.action(app, name, x, y)
   if listview.nav(st, name, n) then return end
   if name == "select" then
     open(app)
-  elseif name == "mycats" then
+  elseif name == "delete" or (name == "mycats" and app.console) then
+    -- Suppr on a computer, Y on the console (C must not delete on a computer)
     delete(app)
   elseif name == "back" then
     app.switch("mycats")
@@ -73,8 +74,9 @@ function catwords.action(app, name, x, y)
 end
 
 function catwords.draw(app)
-  listview.draw(app, cat(app).name, items(app), app.ed.words,
-    "A : modifier · Y : supprimer · B : retour", function(i) return i > 1 end)
+  local hint = app.console and "A : modifier · Y : supprimer · B : retour"
+    or { "Entrée : modifier · Suppr : supprimer · Échap : retour", "Entrée : modifier · Suppr : supprimer" }
+  listview.draw(app, cat(app).name, items(app), app.ed.words, hint, function(i) return i > 1 end)
 end
 
 return catwords

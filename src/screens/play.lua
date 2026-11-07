@@ -5,8 +5,8 @@ local textfit = require("textfit")
 local play = {}
 
 local BOX = { x = 20, y = 90, w = 680, h = 300 }
-local SIZES = { 120, 96, 72, 56, 40 }
-local BACK = { x = 10, y = 10, w = 100, h = 44 }
+local SIZES = { 120, 96, 72, 56, 40, 32, 26, 22 }
+local BACK = { x = 10, y = 10, w = 100, h = 44 } -- w recomputed from the label in layout
 local PASS = { x = 290, y = 424, w = 140, h = 44 }
 
 local function hit(r, x, y)
@@ -25,10 +25,12 @@ function play.update(app, dt)
   end
 end
 
--- Fit the "Passer" button to its label, centered.
+-- Fit the "Passer" button to its label, centered, and "‹ Retour" to its text
+-- (same placement as the editor lists' back button).
 local function layout_pass(app)
   PASS.w = app.fonts.button:getWidth("Passer") + 48
   PASS.x = (ui.W - PASS.w) / 2
+  BACK.w = 10 + app.fonts.hint:getWidth("‹ Retour") + 10
 end
 
 function play.action(app, name, x, y)
@@ -59,8 +61,9 @@ function play.draw(app)
   local r = app.round
   local labelX = 30
   if app.touched then
-    ui.print("‹ Retour", app.fonts.ui, BACK.x + 10, 24, "grey")
-    labelX = BACK.x + BACK.w + 20
+    local hf = app.fonts.hint
+    ui.print("‹ Retour", hf, BACK.x + 10, 24 + (app.fonts.ui:getHeight() - hf:getHeight()) / 2, "grey")
+    labelX = BACK.x + 10 + hf:getWidth("‹ Retour") + 20
   end
   if r.category then ui.print(r.category.label, app.fonts.ui, labelX, 24, "grey") end
   if r.remaining then

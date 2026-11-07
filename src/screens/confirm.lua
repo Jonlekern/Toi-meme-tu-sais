@@ -24,7 +24,7 @@ function confirm.action(app, name, x, y)
     answer(app, true)
   elseif name == "back" then
     answer(app, false)
-  elseif name == "tap" and app.touched then
+  elseif name == "tap" and (app.touched or not app.console) then
     if hit(YES, x, y) then answer(app, true) elseif hit(NO, x, y) then answer(app, false) end
   end
 end
@@ -34,12 +34,15 @@ function confirm.draw(app)
   ui.set("backdrop")
   love.graphics.rectangle("fill", 0, 0, ui.W, ui.H)
   ui.printc("Sûr ?", app.fonts.title, 0, 170, ui.W, "pink")
-  if app.touched then
+  -- buttons for touch and for the mouse (web/computer); the console uses A/B
+  if app.touched or not app.console then
     ui.button("Oui", app.fonts.button, YES.x, YES.y, YES.w, YES.h)
     ui.box(NO.x, NO.y, NO.w, NO.h, nil, "outline")
     ui.printc("Non", app.fonts.button, NO.x, NO.y + (NO.h - app.fonts.button:getHeight()) / 2, NO.w, "text")
-  else
-    ui.printc("A : oui · B : non", app.fonts.small, 0, 436, ui.W, "grey")
+  end
+  if not app.touched then
+    local hint = app.console and "A : oui · B : non" or "Entrée : oui · Échap : non"
+    ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey")
   end
 end
 

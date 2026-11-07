@@ -14,6 +14,7 @@ return {
     T.eq(i:text("?"), "rules")
     T.eq(i:text("a"), nil)
     T.eq(i:key("backspace"), "erase")
+    T.eq(i:key("delete"), "delete")
     T.eq(i:key("z"), nil)
   end,
 

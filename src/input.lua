@@ -6,7 +6,7 @@ input.__index = input
 local KEYS = {
   ["return"] = "select", space = "select", escape = "back",
   up = "up", down = "down", left = "left", right = "right",
-  p = "skip", c = "mycats", backspace = "erase",
+  p = "skip", c = "mycats", backspace = "erase", delete = "delete",
 }
 
 local PAD = {

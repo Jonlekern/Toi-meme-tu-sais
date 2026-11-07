@@ -55,7 +55,8 @@ function mycats.action(app, name, x, y)
   if listview.nav(st, name, n) then return end
   if name == "select" then
     open(app)
-  elseif name == "mycats" then
+  elseif name == "delete" or (name == "mycats" and app.console) then
+    -- Suppr on a computer, Y on the console (C must not delete on a computer)
     delete(app)
   elseif name == "back" then
     app.focus = 1
@@ -73,8 +74,9 @@ end
 
 function mycats.draw(app)
   local deletable = function(i) return i <= #app.custom end
-  listview.draw(app, "Mes catégories", items(app), app.ed.cats,
-    "A : ouvrir · Y : supprimer · B : retour", deletable)
+  local hint = app.console and "A : ouvrir · Y : supprimer · B : retour"
+    or { "Entrée : ouvrir · Suppr : supprimer · Échap : retour", "Entrée : ouvrir · Suppr : supprimer" }
+  listview.draw(app, "Mes catégories", items(app), app.ed.cats, hint, deletable)
 end
 
 return mycats

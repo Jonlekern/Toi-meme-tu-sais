@@ -58,7 +58,7 @@ function rules.draw(app)
   end
   ui.set("grey")
   love.graphics.setFont(app.fonts.small)
-  love.graphics.printf("B : fermer", c.x + PAD, c.y + c.footer_y, c.inner, "right")
+  love.graphics.printf(app.console and "B : fermer" or "Échap : fermer", c.x + PAD, c.y + c.footer_y, c.inner, "right")
 end
 
 return rules
