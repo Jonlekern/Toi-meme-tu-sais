@@ -5,7 +5,7 @@
 <p align="center"><b>A French party game about the memories you share.</b><br>
 By LAFLEURSTUDIO · Anbernic RG SP · Web · Phone</p>
 
-<p align="center"><a href="https://jonlekern.github.io/Toi-m-me-tu-sais/"><b>▶ Play online</b></a></p>
+<p align="center"><a href="https://jonlekern.github.io/Toi-meme-tu-sais/"><b>▶ Play online</b></a></p>
 
 <p align="center">
   <img src="docs/images/home.png" width="380" alt="Home screen">
@@ -44,7 +44,7 @@ The others hear clues that make no sense to them, while you two just know.
 | | |
 |---|---|
 | **Anbernic RG SP (ROCKNIX)** | In the Ports menu. Close and reopen the lid to get a new word. Every word shown is saved to `stats.txt` for later statistics. |
-| **Web** | Plays in any browser with mouse, keyboard or touch: [jonlekern.github.io/Toi-m-me-tu-sais](https://jonlekern.github.io/Toi-m-me-tu-sais/). |
+| **Web** | Plays in any browser with mouse, keyboard or touch: [jonlekern.github.io/Toi-meme-tu-sais](https://jonlekern.github.io/Toi-meme-tu-sais/). |
 | **Phone** | The web version switches to an upright layout with big buttons. |
 
 <p align="center">
