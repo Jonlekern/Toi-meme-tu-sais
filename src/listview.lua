@@ -1,0 +1,109 @@
+-- Scrolling list used by the category editor screens (drawing + hit tests).
+local ui = require("ui")
+
+local lv = {}
+
+local X, W, TOP, ROW, STEP, VIS = 30, 660, 96, 44, 50, 6
+local BACK = { x = 10, y = 10, w = 100, h = 44 }
+
+local function hit(r, x, y)
+  return x >= r.x and x <= r.x + r.w and y >= r.y and y <= r.y + r.h
+end
+
+function lv.new() return { sel = 1, scroll = 0 } end
+
+function lv.clamp(st, n)
+  st.sel = math.max(1, math.min(n, st.sel))
+  if st.sel <= st.scroll then st.scroll = st.sel - 1 end
+  if st.sel > st.scroll + VIS then st.scroll = st.sel - VIS end
+  st.scroll = math.max(0, math.min(math.max(0, n - VIS), st.scroll))
+end
+
+-- Handles up/down; returns true when the name was a navigation action.
+function lv.nav(st, name, n)
+  if name ~= "up" and name ~= "down" then return false end
+  st.sel = st.sel + (name == "down" and 1 or -1)
+  lv.clamp(st, n)
+  return true
+end
+
+function lv.row_at(st, x, y, n)
+  if x < X or x > X + W or y < TOP then return nil end
+  local i = math.floor((y - TOP) / STEP) + 1
+  if i > VIS or (y - TOP) - (i - 1) * STEP > ROW then return nil end
+  local idx = st.scroll + i
+  return idx <= n and idx or nil
+end
+
+local function del_rect(st)
+  return { x = X + W - 168, y = TOP + (st.sel - st.scroll - 1) * STEP + 4, w = 160, h = ROW - 8 }
+end
+
+function lv.del_hit(st, x, y) return hit(del_rect(st), x, y) end
+function lv.back_hit(x, y) return hit(BACK, x, y) end
+
+local function fit(font, text, w)
+  if font:getWidth(text) <= w then return text end
+  while #text > 1 and font:getWidth(text .. "…") > w do
+    text = text:gsub("[%z\1-\127\194-\244][\128-\191]*$", "")
+  end
+  return text .. "…"
+end
+
+-- items: { {left, right, accent, add} }; deletable(idx) says whether the touch delete button applies.
+function lv.draw(app, title, items, st, hint, deletable)
+  local f = app.fonts.ui
+  local tx = 30
+  if app.touched then
+    local hf = app.fonts.hint
+    ui.print("‹ Retour", hf, BACK.x + 10, 24 + (app.fonts.title:getHeight() - hf:getHeight()) / 2, "grey")
+    tx = BACK.x + 10 + hf:getWidth("‹ Retour") + 20
+  end
+  local tf = app.fonts.title
+  if tf:getWidth(title) > ui.W - tx - 30 then tf = app.fonts.head end
+  ui.print(fit(tf, title, ui.W - tx - 30), tf, tx, 24, "pink")
+
+  for i = 1, VIS do
+    local idx, it = st.scroll + i, items[st.scroll + i]
+    if not it then break end
+    local y, on = TOP + (i - 1) * STEP, st.scroll + i == st.sel
+    if on then
+      ui.set("pink")
+      love.graphics.rectangle("fill", X, y, W, ROW, 12, 12)
+    end
+    local fy = y + (ROW - f:getHeight()) / 2
+    local right = it.right
+    local rw = right and f:getWidth(right) or 0
+    local btn = on and app.touched and deletable and deletable(idx)
+    if btn then
+      local r = del_rect(st)
+      ui.box(r.x, r.y, r.w, r.h, nil, "bg")
+      ui.printc("Supprimer", app.fonts.hint, r.x, r.y + (r.h - app.fonts.hint:getHeight()) / 2, r.w, "bg")
+    elseif right then
+      ui.print(right, f, X + W - 16 - rw, fy, on and "bg" or "grey")
+    end
+    local room = W - 32 - (btn and 178 or rw + 16)
+    local col = on and "bg" or (it.accent and "pink" or "text")
+    local left, lx = it.left, X + 16
+    if it.add then -- the font's "+" glyph is tiny: draw it as lines
+      local s, cx, cy = f:getHeight() * 0.5, lx + f:getHeight() * 0.3, y + ROW / 2
+      ui.set(col)
+      love.graphics.setLineWidth(2.5)
+      love.graphics.line(cx - s / 2, cy, cx + s / 2, cy)
+      love.graphics.line(cx, cy - s / 2, cx, cy + s / 2)
+      lx, room = lx + f:getHeight() * 1.1, room - f:getHeight() * 1.1
+    end
+    ui.print(fit(f, left, room), f, lx, fy, col)
+  end
+
+  ui.set("grey")
+  if st.scroll > 0 then
+    love.graphics.polygon("fill", ui.W - 14, 72, ui.W - 8, 82, ui.W - 20, 82)
+  end
+  if st.scroll + VIS < #items then
+    love.graphics.polygon("fill", ui.W - 14, 430, ui.W - 8, 420, ui.W - 20, 420)
+  end
+  if hint and not app.touched then ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey") end
+end
+
+return lv

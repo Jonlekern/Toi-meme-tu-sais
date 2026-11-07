@@ -1,0 +1,71 @@
+Cartable
+Patron
+Cantine
+Collègue
+Bureau
+Réunion
+Open space
+Ordinateur
+Imprimante
+Photocopieuse
+Mail
+Pièce jointe
+Visioconférence
+Pause café
+Machine à café
+Badge
+Horaire
+Heures sup
+Congé
+Vacances scolaires
+Salaire
+Fiche de paie
+Contrat
+Stage
+Apprentissage
+Entretien d'embauche
+CV
+Lettre de motivation
+Chômage
+Démission
+Licenciement
+Chef
+Télétravail
+Agenda
+Post-it
+Stylo
+Classeur
+Cahier
+Trousse
+Gomme
+Règle
+Calculatrice
+Tableau noir
+Prof
+Directeur
+Récréation
+Cloche
+Devoirs
+Interro
+Examen
+Note
+Bulletin
+Redoublement
+Camarade
+Triche
+Absence
+Retenue
+Excursion
+Course d'école
+Cours de gym
+Cours de maths
+Amphi
+Université
+Mémoire
+Révisions
+Nuit blanche
+Photocopie
+Rentrée
+Vacances d'été
+Sonnerie
+Casier

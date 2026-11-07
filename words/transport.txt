@@ -1,0 +1,67 @@
+Vélo
+Train
+Taxi
+Bus
+Tram
+Métro
+Dernier métro
+Dernier bus
+Trottinette
+Scooter
+Moto
+Voiture
+Camion
+Avion
+Aéroport
+Valise
+Gare
+Quai
+Abonnement
+Demi-tarif
+Billet
+Contrôleur
+Amende
+Retard
+Correspondance
+Horaire
+Arrêt de bus
+Embouteillage
+Autoroute
+Vignette
+Péage
+Parking
+Station-service
+Plein d'essence
+Pneu crevé
+Ceinture
+Permis
+Leçon de conduite
+Auto-stop
+Covoiturage
+Chauffeur
+Siège bébé
+GPS
+Feu rouge
+Passage piéton
+Piste cyclable
+Casque
+Cadenas
+Pompe à vélo
+Bateau
+Ferry
+Lac
+Téléphérique
+Télésiège
+Funiculaire
+Voyage
+Vacances
+Camping
+Sac à dos
+Passeport
+Frontière
+Douane
+Bagage
+Retard de train
+Place assise
+Wagon
+Gilet jaune

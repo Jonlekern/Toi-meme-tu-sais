@@ -1,0 +1,70 @@
+Baguette
+Fourchette
+Crêpe
+Raclette
+Fondue
+Pizza
+Kebab
+Spaghetti
+Gratin
+Croissant
+Tresse
+Röstis
+Saucisse
+Cervelas
+Poulet
+Frites
+Hamburger
+Sandwich
+Salade
+Soupe
+Omelette
+Œuf au plat
+Pâtes
+Riz
+Sushi
+Tacos
+Falafel
+Fromage
+Gruyère
+Beurre
+Confiture
+Pâte à tartiner
+Chocolat
+Glace
+Gâteau
+Tarte
+Brownie
+Biscuit
+Chips
+Pop-corn
+Yaourt
+Céréales
+Café
+Thé
+Jus d'orange
+Coca
+Eau gazeuse
+Bière
+Vin rouge
+Apéro
+Brunch
+Petit-déjeuner
+Goûter
+Barbecue
+Pique-nique
+Cantine
+Resto
+Menu du jour
+Addition
+Pourboire
+Livraison
+Reste de pizza
+Grillade
+Cornichon
+Moutarde
+Ketchup
+Mayonnaise
+Pomme
+Banane
+Fraise

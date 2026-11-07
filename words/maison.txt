@@ -1,0 +1,69 @@
+Canapé
+Rideau
+Tapis
+Frigo
+Lessive
+Aspirateur
+Réveil
+Douche
+Baignoire
+Lave-vaisselle
+Machine à laver
+Sèche-linge
+Micro-ondes
+Four
+Cafetière
+Bouilloire
+Grille-pain
+Poubelle
+Balai
+Serpillière
+Éponge
+Liquide vaisselle
+Ampoule
+Prise
+Rallonge
+Télécommande
+Wifi
+Routeur
+Chargeur
+Oreiller
+Couette
+Drap
+Matelas
+Armoire
+Penderie
+Cintre
+Étagère
+Bibliothèque
+Miroir
+Tiroir
+Clé
+Sonnette
+Boîte aux lettres
+Paillasson
+Balcon
+Cave
+Grenier
+Escalier
+Ascenseur
+Voisin
+Colocataire
+Loyer
+Déménagement
+Carton
+Bougie
+Plante verte
+Radiateur
+Volet
+Fenêtre
+Papier toilette
+Brosse à dents
+Sèche-cheveux
+Rasoir
+Serviette
+Tapis de bain
+Table basse
+Chaise
+Cuisine
+Salon

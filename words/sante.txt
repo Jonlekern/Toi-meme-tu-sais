@@ -1,0 +1,69 @@
+Pansement
+Dentiste
+Rhume
+Doliprane
+Grippe
+Fièvre
+Thermomètre
+Mal de tête
+Mal de dos
+Mal de ventre
+Toux
+Nez qui coule
+Mouchoir
+Éternuement
+Angine
+Gastro
+Vomi
+Diarrhée
+Migraine
+Courbature
+Entorse
+Plâtre
+Béquilles
+Prise de sang
+Piqûre
+Vaccin
+Médecin
+Docteur
+Urgences
+Ambulance
+Hôpital
+Infirmière
+Pharmacie
+Ordonnance
+Antibiotique
+Sirop
+Pastille
+Spray nasal
+Crème
+Pommade
+Lunettes
+Lentilles
+Optométriste
+Appareil dentaire
+Carie
+Rage de dents
+Dent de sagesse
+Radio
+Test covid
+Masque
+Certificat médical
+Arrêt maladie
+Assurance maladie
+Franchise
+Régime
+Balance
+Sport
+Footing
+Salle de sport
+Yoga
+Massage
+Sieste
+Insomnie
+Coup de soleil
+Crème solaire
+Piqûre de moustique
+Allergie
+Rhume des foins
+Bosse

@@ -1,0 +1,489 @@
+Natel
+Coop
+Migros
+Lac de Bienne
+Frigo
+Bus
+Chaussette
+Parapluie
+Clés
+Portefeuille
+Lunettes de soleil
+Écouteurs
+Powerbank
+Sac à main
+Sac de sport
+Jogging
+Baskets
+Pantoufles
+Pull moche
+Doudoune
+Bonnet
+Écharpe
+Gants
+Maillot de bain
+Tong
+Casquette
+Ceinture en cuir
+Jean troué
+Chemise
+Cravate
+Robe
+Talons
+Manteau
+Capuche
+Pyjama à pois
+Doudou
+Peluche
+Poster
+Cadre photo
+Album photo
+Carte postale
+Timbre
+Colis
+Facteur
+Enveloppe
+Lettre
+Facture
+Rappel
+Amende de parking
+Impôts
+Banque
+Bancomat
+Monnaie
+Pièce de monnaie
+Billet de vingt
+Tirelire
+Soldes
+Ticket de caisse
+Caddie
+Sac plastique
+Caisse
+Rayon surgelés
+Liste de courses
+Marché
+Boulangerie
+Boucherie
+Kiosque
+Tabac
+Lavomatic
+Coiffeur
+Barbier
+Manucure
+Tatouage
+Piercing
+Parfum
+Déodorant
+Dentifrice
+Fil dentaire
+Shampoing
+Gel douche
+Maquillage
+Rouge à lèvres
+Mascara
+Vernis
+Pince à épiler
+Coton-tige
+Lingette
+Gomina
+Téléphone
+Écran cassé
+Batterie à plat
+Mode avion
+Capture d'écran
+Notification
+Message vocal
+Appel manqué
+Groupe WhatsApp
+Emoji
+Mème
+Série
+Film d'horreur
+Cinéma
+Séance de ciné
+Salle d'arcade
+Console
+Manette
+Jeu vidéo
+Jeu de société
+Cartes
+Jass
+Dés
+Puzzle
+Échecs
+Pétanque
+Ping-pong
+Baby-foot
+Billard
+Bowling
+Fléchettes
+Karting
+Patinoire
+Piscine
+Plongeoir
+Plage
+Serviette de plage
+Château de sable
+Glace à l'eau
+Bateau à pédales
+Barbecue au lac
+Feu de camp
+Guitare
+Piano
+Batterie
+Festival de rue
+Fête foraine
+Grande roue
+Barbe à papa
+Auto-tamponneuse
+Feux d'artifice
+Premier août
+Carnaval
+Noël
+Sapin
+Guirlande
+Cadeaux
+Calendrier de l'Avent
+Père Noël
+Pâques
+Œufs en chocolat
+Saint-Valentin
+Bouquet
+Rose
+Alliance
+Mariage
+Demande en mariage
+Voyage de noces
+Bébé
+Poussette
+Biberon
+Couche
+Tétine
+Crèche
+Berceuse
+Doudou perdu
+Chien
+Chat
+Laisse
+Litière
+Gamelle
+Hamster
+Poisson rouge
+Aquarium
+Oiseau
+Balade
+Forêt
+Montagne
+Randonnée
+Sentier
+Chalet
+Refuge
+Ski
+Luge
+Bonhomme de neige
+Boule de neige
+Neige
+Verglas
+Pluie
+Orage
+Brouillard
+Canicule
+Ventilateur
+Climatisation
+Glaçon
+Soleil
+Arc-en-ciel
+Vent
+Parc
+Banc
+Fontaine
+Pigeon
+Écureuil
+Jardin
+Tondeuse
+Arrosoir
+Tente
+Duvet
+Sac de couchage
+Lampe de poche
+Piles
+Couteau suisse
+Carte routière
+Boussole
+Appareil photo
+Trépied
+Vacances au bord
+Hôtel
+Auberge de jeunesse
+Chambre double
+Réception
+Clé de chambre
+Petit-déj buffet
+Piscine d'hôtel
+Souvenir
+Bronzage
+Moustique
+Fourmis
+Guêpe
+Araignée
+Mouche
+Cafard
+Souris
+Cave humide
+Fuite d'eau
+Panne de courant
+Bougie d'urgence
+Plombier
+Électricien
+Serrurier
+Bricolage
+Marteau
+Tournevis
+Perceuse
+Clou
+Vis
+Scotch
+Colle
+Ciseaux
+Ruban adhésif
+Cutter
+Échelle
+Peinture
+Pinceau
+Tapisserie
+Meuble en kit
+Notice
+Tabouret
+Lit superposé
+Hamac
+Pouf
+Lampe
+Plaid
+Bouillotte
+Tisane
+Chocolat chaud
+Fondue chinoise
+Cheminée
+Bûche
+Allumettes
+Briquet
+Cendrier
+Ordinateur portable
+Clavier
+Souris d'ordinateur
+Câble
+Clé USB
+Disque dur
+Mot de passe
+Antivirus
+Mise à jour
+Écran bleu
+Imprimante en panne
+Scanner
+Livre
+Bibliothèque municipale
+Journal
+Magazine
+BD
+Mots croisés
+Sudoku
+Horoscope
+Loto
+Ticket à gratter
+Tombola
+Cadeau d'anniversaire
+Carte de vœux
+Bougies d'anniversaire
+Gâteau d'anniversaire
+Surprise
+Photo de classe
+Fête de famille
+Grand-mère
+Grand-père
+Tante
+Oncle
+Cousin
+Beau-père
+Repas du dimanche
+Pot-au-feu
+Soupe de légumes
+Pain perdu
+Cake
+Muffin
+Cookies
+Pâte à crêpes
+Chandeleur
+Gaufre
+Marron chaud
+Cornet de frites
+Boulette
+Café crème
+Chocolatine
+Saucisson
+Jambon
+Œufs durs
+Tartine
+Pain grillé
+Miel
+Lait
+Paille
+Bocal
+Tupperware
+Thermos
+Gourde
+Passoire
+Casserole
+Poêle
+Planche à découper
+Rouleau à pâtisserie
+Fouet
+Louche
+Ouvre-boîte
+Tire-bouchon
+Décapsuleur
+Verre cassé
+Nappe
+Serviette en papier
+Bougeoir
+Table de fête
+Chaises pliantes
+Terrasse
+Parasol
+Hamburger maison
+Sauce salade
+Vinaigre
+Huile d'olive
+Sel
+Poivre
+Épices
+Ail
+Oignon
+Carotte
+Pomme de terre
+Tomate
+Concombre
+Champignon
+Orange
+Citron
+Raisin
+Pastèque
+Cerise
+Chewing-gum
+Bonbon
+Sucette
+Nounours gélifié
+Barre chocolatée
+Sirop de grenadine
+Thé froid
+Limonade
+Smoothie
+Boîte de conserve
+Ravioli
+Soupe en sachet
+Nouilles instantanées
+Plat surgelé
+Micro-onde cassé
+Poubelle pleine
+Tri des déchets
+Sac poubelle
+Verre usagé
+Déchetterie
+Recyclage
+Vélo volé
+Casque de vélo
+Embouteillage matinal
+Chauffeur de bus
+Carte journalière
+Retard de bus
+Aller-retour
+Siège côté fenêtre
+Valise perdue
+Contrôle de sécurité
+Salle d'attente
+Cabinet médical
+Radiographie
+Thermomètre cassé
+Tisane de grand-mère
+Sommeil
+Ronflement
+Cauchemar
+Rêve
+Somnambule
+Café du matin
+Retard au réveil
+Snooze
+Bâillement
+Hoquet
+Larmes
+Câlin
+Bise
+Poignée de main
+Applaudissements
+Cri
+Chuchotement
+Secret
+Blague
+Dispute
+Pardon
+Merci
+Surprise-partie
+Invitation
+Liste d'invités
+Retard de copain
+Rendez-vous
+Rendez-vous raté
+Lapin
+Attente
+File d'attente
+Numéro d'attente
+Guichet
+Formulaire
+Tampon
+Signature
+Passeport expiré
+Carte d'identité
+Photo d'identité
+Permis de conduire
+Assurance
+Abonnement de salle
+Bonne résolution
+Régime de lundi
+Balance cassée
+Miroir embué
+Coup de fil
+Sonnerie bizarre
+Karaoké de famille
+Chanson du moment
+Tube de l'été
+Danse ridicule
+Costume
+Masque de carnaval
+Serpentin
+Maquillage de clown
+Cirque
+Zoo
+Musée
+Visite guidée
+Audioguide
+Boutique de souvenirs
+Cathédrale
+Château
+Vieille ville
+Bord du lac
+Pont
+Rivière
+Quai du lac
+Île
+Vignes
+Cave à vin
+Dégustation
+Vendanges
+Tracteur
+Vache
+Cloche de vache
+Chèvre
+Cheval
+Poney
+Ferme
+Foin
+Botte de paille

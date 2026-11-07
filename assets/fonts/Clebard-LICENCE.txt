@@ -1,0 +1,40 @@
+Clebard
+=======
+
+Modifications (Clebard): Copyright 2026 LaFleurStudio.
+
+Based on TeX Gyre Heros: Copyright 2007-2009 B. Jackowski and J.M. Nowacki
+(on behalf of TeX Users Groups), Vietnamese characters added by Han The Thanh,
+itself based on URW Nimbus Sans L, kindly released by URW++ Design and
+Development Inc. under the GUST Font License.
+
+Clebard is a modified version of TeX Gyre Heros. It is NOT the original
+TeX Gyre Heros: as requested by the GUST Font License, the fonts and the
+files have been given new names.
+
+License
+-------
+This work may be distributed and/or modified under the conditions of the
+GUST Font License (GFL), which is an instance of the LaTeX Project Public
+License (LPPL), version 1.3c or (at your option) any later version.
+See GUST-FONT-LICENSE.txt and lppl.txt in this folder.
+
+The files comprising the work are listed in MANIFEST-Clebard.txt.
+
+Changes made by LaFleurStudio (2026)
+------------------------------------
+- Width extended to 140 %, vertical stems brought back to their target
+  thickness (outlines offset horizontally).
+- Six weights obtained by offsetting the outlines of TeX Gyre Heros Regular
+  and Bold: Demi (400), Short (600), Tall (800), Grande (1000),
+  Venti (1200) and Trenta (1400).
+- Horizontal strokes thinned where needed to keep counters open; dots and
+  accents moved apart from the letters. In Trenta, the glyphs that would
+  close are taken from Venti and thickened horizontally only.
+- Spacing and kerning taken from Calebard (LaFleurStudio).
+- Embedding flag (fsType) set to 0: the fonts can be installed and embedded
+  freely.
+- Outlines converted to TrueType; names, vertical metrics and weight
+  classes changed.
+
+The scripts used to make these changes are in the source/ folder.
