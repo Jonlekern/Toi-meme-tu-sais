@@ -90,4 +90,27 @@ return {
     T.eq(#r, 1)
     T.eq(#r[1].words, 1)
   end,
+
+  test_custom_melange_reserved = function()
+    local ok, why = custom.valid_name({}, "Mélange")
+    T.eq(ok, nil); T.eq(why, "réservé")
+    ok, why = custom.valid_name({}, "MÉLANGE")
+    T.eq(why, "réservé")
+    ok, why = custom.valid_name({}, " mélange ")
+    T.eq(why, "réservé")
+    T.eq(#custom.parse("[Mélange]\nx\n"), 0)
+    T.eq(custom.valid_name({}, "Mélange 2"), true)
+  end,
+  test_custom_strips_middle_dot = function()
+    T.eq(custom.clean_name("Potes · lycée"), "Potes lycée")
+    T.eq(custom.clean_name("·A·"), "A")
+    local cat = { name = "A", words = {} }
+    T.eq(custom.add_word(cat, "un·deux · trois"), true)
+    T.eq(cat.words[1], "un deux trois")
+    local ok, why = custom.add_word(cat, " · ")
+    T.eq(why, "vide")
+    local r = custom.parse("[B·C]\nx · y\n")
+    T.eq(r[1].name, "B C")
+    T.eq(r[1].words[1], "x y")
+  end,
 }

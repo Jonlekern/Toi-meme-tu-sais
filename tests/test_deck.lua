@@ -124,4 +124,27 @@ return {
     local w, c = d:next()
     T.ok(w); T.eq(c, nil)
   end,
+
+  test_deck_signature = function()
+    T.eq(deck.signature({ soiree = true, bouffe = true }), deck.signature({ bouffe = true, soiree = true }))
+    T.eq(deck.signature({ soiree = true, bouffe = false }), deck.signature({ soiree = true }))
+    T.ok(deck.signature({ soiree = true }) ~= deck.signature({ soiree = true, bouffe = true }))
+    T.eq(deck.signature({}), deck.signature(nil))
+  end,
+
+  -- Keeping one deck across rounds (what main.lua does while the ticks do not
+  -- change) never repeats a category word before its bag is exhausted.
+  test_deck_kept_across_rounds_no_repeat = function()
+    local rng = seed()
+    local d = deck.new(lists(), { soiree = true }, rng)
+    local seen, n = {}, 0
+    while n < 4 do
+      local w, c = d:next()
+      if c then
+        T.ok(not seen[w], "repeat " .. w)
+        seen[w] = true
+        n = n + 1
+      end
+    end
+  end,
 }

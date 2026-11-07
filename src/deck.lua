@@ -61,6 +61,17 @@ function deck.new(lists, checked, rng)
   return self
 end
 
+-- Identifies the ticked categories (order-independent) so a deck is rebuilt
+-- only when they change; false/nil entries do not count.
+function deck.signature(checked)
+  local ids = {}
+  for id, on in pairs(checked or {}) do
+    if on then ids[#ids + 1] = id end
+  end
+  table.sort(ids)
+  return table.concat(ids, "\n")
+end
+
 -- Returns word, category ({id, label} or nil for melange words);
 -- nil when there is nothing to draw.
 function Deck:next()

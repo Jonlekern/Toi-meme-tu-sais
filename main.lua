@@ -57,6 +57,7 @@ end
 -- Called after any change to the custom categories: refresh, drop dead ticks, persist.
 function app.customChanged()
   local known = rebuild()
+  app.deck = nil -- word lists changed: next round builds a fresh deck
   for id in pairs(app.settings.categories) do
     if not known[id] then app.settings.categories[id] = nil end
   end
@@ -74,8 +75,15 @@ function app.confirmThen(from, yes)
   app.switch("confirm")
 end
 
+-- The deck lives across rounds so no word repeats before its bag is empty;
+-- it is rebuilt only on first play, when the ticked categories change, or
+-- after the custom categories changed (app.customChanged clears it).
 function app.startRound()
-  app.deck = deck.new(app.lists, app.settings.categories, love.math.random)
+  local sig = deck.signature(app.settings.categories)
+  if not app.deck or app.deckSig ~= sig then
+    app.deck = deck.new(app.lists, app.settings.categories, love.math.random)
+    app.deckSig = sig
+  end
   local on_done
   if app.console then
     on_done = function(entry)
@@ -94,7 +102,14 @@ local function read_file(path)
   return (love.filesystem.read(path))
 end
 
+-- A failing lid thread must never take the game down.
+function love.threaderror(t, e)
+  print("lid: " .. tostring(e))
+  lidChannel = nil
+end
+
 function love.load()
+  io.stdout:setvbuf("line")
   app.console = love.system.getOS() == "Linux"
   love.graphics.setBackgroundColor(ui.color.bg)
   love.math.setRandomSeed(os.time())

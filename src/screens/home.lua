@@ -85,6 +85,8 @@ function home.action(app, name, x, y)
   local list = pills(app)
   local n = #list
   local chrono, jouer = n + 1, n + 2
+  -- the pill count can change (custom categories): keep the focus on something that exists
+  app.focus = math.max(1, math.min(jouer, app.focus or 1))
   local f = app.focus
   if name == "rules" then
     return app.switch("rules")
@@ -145,7 +147,7 @@ function home.action(app, name, x, y)
       end
       if best then app.focus = best elseif dir > 0 then app.focus = chrono end
     elseif f == chrono then
-      app.focus = dir > 0 and jouer or n
+      if dir > 0 then app.focus = jouer elseif n > 0 then app.focus = n end
     else
       app.focus = dir > 0 and jouer or chrono
     end
@@ -156,6 +158,7 @@ function home.draw(app)
   layout_btn(app)
   local list = pills(app)
   local n = #list
+  app.focus = math.max(1, math.min(n + 2, app.focus or 1))
   ui.print("De toi-même", app.fonts.title, 30, 24)
   ui.print("tu sais", app.fonts.title, 30, 70, "pink")
 

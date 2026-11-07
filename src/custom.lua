@@ -17,9 +17,10 @@ local function length(s)
   return #s:gsub("[\128-\191]", "")
 end
 
--- Trim, collapse inner spaces; commas (settings separator) and a leading "[" are not kept.
+-- Trim, collapse inner spaces; commas (settings separator), "·" (stats separator)
+-- and a leading "[" are not kept.
 local function clean(s, is_name)
-  s = (s or ""):gsub("%s+", " "):match("^ ?(.-) ?$")
+  s = (s or ""):gsub("\194\183", " "):gsub("%s+", " "):match("^ ?(.-) ?$")
   if is_name then s = s:gsub(",", " "):gsub("%s+", " ") else s = s:gsub("^%[+", "") end
   return (s:match("^ ?(.-) ?$"))
 end
@@ -61,6 +62,7 @@ function M.valid_name(cats, name, ignore_index)
   if name == "" then return nil, "vide" end
   if length(name) > M.MAX_NAME then return nil, "trop long" end
   local f = fold(name)
+  if f == fold("Mélange") then return nil, "réservé" end -- the base list's name in stats
   for _, b in ipairs(categories.LIST) do
     if fold(b.label) == f then return nil, "réservé" end
   end
