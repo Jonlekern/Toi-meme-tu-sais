@@ -19,7 +19,8 @@ done
 HOST="${RGSP_HOST:-192.168.1.138}"
 MNT="${TMPDIR:-/tmp}/detoimeme-rgsp"
 SRC=build/port
-LAUNCHER="De toi-meme tu sais.sh"
+LAUNCHER="Toi-meme tu sais.sh"
+OLD_LAUNCHER="De toi-meme tu sais.sh"   # first-install name, removed after the new one is verified
 BACKUP="build/console-backup-$(date +%Y%m%d-%H%M%S)"
 export COPYFILE_DISABLE=1
 
@@ -41,6 +42,8 @@ if [ "$DRY" = 1 ]; then
   n=$((n + 1))
   echo "[dry-run] $n file(s) to copy (only those that differ)"
   echo "[dry-run] warn if launcher or bin/detoimeme is not executable on the share"
+  echo "[dry-run] then, once the new launcher is verified: back up '<share>/ports/$OLD_LAUNCHER' to $BACKUP/ (cat > backup ; cmp)"
+  echo "[dry-run] then rm -f '<share>/ports/$OLD_LAUNCHER' and '<share>/ports/._$OLD_LAUNCHER' (only those two files)"
   echo "[dry-run] delete ._* under <share>/ports/detoimeme and the launcher's ._ file"
   echo "[dry-run] umount $MNT/games-roms (only if mounted by this script)"
   echo "dry run only: pass --yes to install."
@@ -90,6 +93,22 @@ done < <(find "$SRC/detoimeme" -type f ! -name '._*' ! -name '.DS_Store' -print0
 copy_one "$LAUNCHER"
 echo "$copied file(s) copied"
 
+# Old launcher from the first install: back up, then remove exactly that file (and its ._ sibling).
+OLD="$PORTS/$OLD_LAUNCHER"
+if [ -f "$OLD" ]; then
+  if [ -f "$PORTS/$LAUNCHER" ] && cmp -s "$SRC/$LAUNCHER" "$PORTS/$LAUNCHER"; then
+    cat "$OLD" > "$BACKUP/$OLD_LAUNCHER"
+    cmp "$OLD" "$BACKUP/$OLD_LAUNCHER" || { echo "backup failed: $OLD_LAUNCHER" >&2; exit 1; }
+    echo "old launcher backed up to $BACKUP/$OLD_LAUNCHER; removing '$OLD_LAUNCHER' from the console"
+    rm -f "$OLD"
+  else
+    echo "new launcher not verified: keeping '$OLD_LAUNCHER'" >&2
+  fi
+fi
+if [ -e "$PORTS/._$OLD_LAUNCHER" ]; then
+  echo "removing '._$OLD_LAUNCHER'"
+  rm -f "$PORTS/._$OLD_LAUNCHER"
+fi
 find "$PORTS/detoimeme" -name '._*' -delete
 rm -f "$PORTS/._$LAUNCHER"
 rmdir "$BACKUP" 2>/dev/null || true

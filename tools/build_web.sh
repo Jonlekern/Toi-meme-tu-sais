@@ -13,13 +13,16 @@ rm -f "$LOVE"
 zip -X -r -q "$LOVE" main.lua conf.lua src words assets -x '*.DS_Store' -x '*/._*'
 
 rm -rf "$OUT"
-npx --yes "love.js@$LOVEJS_VERSION" -c -t "De toi-même tu sais" "$LOVE" "$OUT"
+npx --yes "love.js@$LOVEJS_VERSION" -c -t "Toi-même tu sais" "$LOVE" "$OUT"
 
 # Our own page replaces the generated one.
 cp web/index.html "$OUT/index.html"
+cp assets/logo/logo-32.png "$OUT/favicon-32.png"
+cp assets/logo/logo-192.png "$OUT/icon-192.png"
+cp assets/logo/logo-180.png "$OUT/apple-touch-icon.png"
 rm -rf "$OUT/theme"
 cat > "$OUT/README.md" <<'EOR'
-# De toi-même tu sais (web)
+# Toi-même tu sais (web)
 
 Static site: serve this folder as-is over HTTPS (any static host, no server code).
 Open `index.html`; the game loads from the files next to it.
@@ -28,5 +31,6 @@ Files:
 - `index.html`: the page (canvas scaled to fit, 3:2)
 - `game.js`, `game.data`: the game package
 - `love.js`, `love.wasm`: the LOVE runtime
+- `favicon-32.png`, `icon-192.png`, `apple-touch-icon.png`: the logo icons
 EOR
 echo "Web build ready in $OUT"

@@ -159,7 +159,7 @@ function home.draw(app)
   local list = pills(app)
   local n = #list
   app.focus = math.max(1, math.min(n + 2, app.focus or 1))
-  ui.print("De toi-même", app.fonts.title, 30, 24)
+  ui.print("Toi-même", app.fonts.title, 30, 24)
   ui.print("tu sais", app.fonts.title, 30, 70, "pink")
 
   local _, bottom = pills(app)

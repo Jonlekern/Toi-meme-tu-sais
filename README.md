@@ -1,4 +1,6 @@
-# De toi-même tu sais
+<p align="center"><img src="assets/logo/logo-512.png" width="160" alt="Toi-même tu sais"></p>
+
+# Toi-même tu sais
 
 A French party word game by LAFLEURSTUDIO, built with LÖVE 11.5.
 

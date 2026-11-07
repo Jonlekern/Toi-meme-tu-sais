@@ -1,5 +1,5 @@
 #!/bin/bash
-# De toi-même tu sais — launcher shown in the "Ports" menu of ROCKNIX.
+# Toi-même tu sais — launcher shown in the "Ports" menu of ROCKNIX.
 # LÖVE: aarch64 binary from the PortMaster "Spotify Connect" port, copied as "detoimeme"
 # so the ROCKNIX close shortcut (set_kill) only targets this game.
 

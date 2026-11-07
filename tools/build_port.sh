@@ -19,13 +19,15 @@ OUT=build/port
 rm -rf "$OUT"
 mkdir -p "$OUT/detoimeme/bin" "$OUT/detoimeme/game"
 
-cp -X "port/De toi-meme tu sais.sh" "$OUT/"
-chmod +x "$OUT/De toi-meme tu sais.sh"
+cp -X "port/Toi-meme tu sais.sh" "$OUT/"
+chmod +x "$OUT/Toi-meme tu sais.sh"
 
 cp -X "$SRC_BIN/$SRC_ELF" "$OUT/detoimeme/bin/detoimeme"
 chmod +x "$OUT/detoimeme/bin/detoimeme"
 mkdir -p "$OUT/detoimeme/bin/libs"
 for f in "$SRC_BIN"/libs/*; do cp -X "$f" "$OUT/detoimeme/bin/libs/"; done
+
+cp -X assets/logo/logo-512.png "$OUT/detoimeme/logo.png"
 
 cp -X main.lua conf.lua "$OUT/detoimeme/game/"
 for d in src words assets; do
