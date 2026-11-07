@@ -1,0 +1,19 @@
+Toi-même tu sais
+Copyright (c) 2026 LAFLEURSTUDIO. All rights reserved.
+
+This software, its source code, word lists, graphics, logo and documentation
+are the property of LAFLEURSTUDIO.
+
+You may view the source code on GitHub and play the game for personal,
+non-commercial use. You may not copy, modify, distribute, sublicense, sell,
+or publish the software or any part of it, or any derived work, without
+prior written permission from LAFLEURSTUDIO.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL LAFLEURSTUDIO BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+Third-party components keep their own licences:
+- Clebard (GUST Font License) and Calebard (SIL Open Font License 1.1) fonts,
+  by LAFLEURSTUDIO, licence files in assets/fonts/.
+- LÖVE (zlib licence) and love.js, used to run and build the game.

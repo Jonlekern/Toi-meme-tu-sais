@@ -1,71 +1,109 @@
-<p align="center"><img src="assets/logo/logo-512.png" width="160" alt="Toi-même tu sais"></p>
+<p align="center"><img src="assets/logo/logo-512.png" width="180" alt="Toi-même tu sais"></p>
 
-# Toi-même tu sais
+<h1 align="center">Toi-même tu sais</h1>
 
-A French party word game by LAFLEURSTUDIO, built with LÖVE 11.5.
+<p align="center"><b>A French party game about the memories you share.</b><br>
+By LAFLEURSTUDIO · Anbernic RG SP · Web · Phone</p>
 
-Two players team up while the others listen. One of them sees an everyday word
-and makes the partner guess it **only by recalling memories they share**. The
-other team listens and can try to guess too. Press A for the next word, X to
-skip a word that is too hard.
+<p align="center"><a href="https://jonlekern.github.io/Toi-m-me-tu-sais/"><b>▶ Play online</b></a></p>
 
-- 6 categories (Maison, Bouffe, Transport, Boulot/École, Santé, Soirée) mixed
-  into a base list of ~500 words by a hidden die.
-- Optional timer: 30, 60 or 90 seconds. No score.
-- Create your own categories and words in the game (on-screen keyboard on the console).
-- On the Anbernic RG SP: closing and reopening the lid shows a new word, and
-  every word shown is logged to `stats.txt` for later statistics.
+<p align="center">
+  <img src="docs/images/home.png" width="380" alt="Home screen">
+  <img src="docs/images/word.png" width="380" alt="A word to guess">
+</p>
+
+## How to play
+
+Play in pairs while the others listen.
+
+1. A word from everyday life appears, and only one of you looks at it.
+2. Make your partner guess it **only by recalling something you lived together**:
+   *« Tu te rappelles hier soir, j'étais pas bien, tu m'as dit de prendre un truc… »*
+   → *« Doliprane ! »*
+3. The other team listens and can try to guess too.
+4. Found it? Next word. Too hard? Skip it.
+
+The others hear clues that make no sense to them, while you two just know.
+*De toi-même tu sais.*
+
+<p align="center"><img src="docs/images/rules.png" width="420" alt="Rules card"></p>
+
+## What's inside
+
+- **~900 everyday French words**: a base list of ~500, plus 6 categories you can tick:
+  Maison, Bouffe, Transport, Boulot/École, Santé and Soirée (a bit spicier).
+- **A hidden die** slips a word from your ticked categories in every 2, 3 or 4 words.
+- **No word comes back** until its whole pile has been used.
+- **Optional timer**: 30, 60 or 90 seconds. No score, just fun.
+- **Your own categories**: create them and type your own words in the game.
+  The console has an on-screen AZERTY keyboard.
+- **Rules card** one tap away (the « ? » button).
 
 ## Platforms
 
-- **Anbernic RG SP (ROCKNIX)**: PortMaster-style port, in the Ports menu.
-- **Web browser**: static site built with love.js (see below), playable with a
-  mouse and keyboard or by touch.
+| | |
+|---|---|
+| **Anbernic RG SP (ROCKNIX)** | In the Ports menu. Close and reopen the lid to get a new word. Every word shown is saved to `stats.txt` for later statistics. |
+| **Web** | Plays in any browser with mouse, keyboard or touch: [jonlekern.github.io/Toi-m-me-tu-sais](https://jonlekern.github.io/Toi-m-me-tu-sais/). |
+| **Phone** | The web version switches to an upright layout with big buttons. |
 
-## Run on a computer
+<p align="center">
+  <img src="docs/images/console-keyboard.png" width="380" alt="On-screen keyboard on the console">
+  <img src="docs/images/phone-home.png" width="150" alt="Phone home screen">
+  <img src="docs/images/phone-word.png" width="150" alt="Phone word screen">
+</p>
 
-Install [LÖVE](https://love2d.org/) 11.5, then from the project root:
+## Controls
 
-    love .
+| Action | RG SP | Computer | Phone |
+|---|---|---|---|
+| Next word | A, or close and reopen the lid | Click, Space or Enter | Tap the screen |
+| Skip word | X | P | « Passer » button |
+| Rules | SELECT | ? | « ? » |
+| My categories | Y | C | « Mes catégories » |
+| Back | B | Escape | « ‹ Retour » |
 
-## Web
+---
 
-Needs [Node.js](https://nodejs.org/) (for `npx`) and `zip`. From the project root:
+## For developers
 
-    tools/build_web.sh <output-dir>
-
-The script packages the game and runs love.js 11.4.1 in compatibility mode
-(`-c`, no SharedArrayBuffer needed), then puts `web/index.html` in place of the
-generated page. Without an argument the output goes to `build/web`.
-
-The result is a static site: serve the folder as-is over HTTPS from any static
-host (to try it locally: `python3 -m http.server -d <output-dir>`). Publishing
-it is done by hand; no script uploads anything.
-
-## Install on the console
-
-1. On the console, enable Samba (START > Network Settings > Enable Samba).
-2. Point the build at a folder holding an aarch64 LÖVE 11.5 binary and its
-   `libs/` folder (for example the binary folder of another LÖVE port):
-   - `LOVE_BIN_DIR`: that folder (or write its path on the first line of
-     `build/love-bin-dir`);
-   - `LOVE_BIN_NAME`: the file name of the binary in it (default `lafleur-ui`).
-
-   `tools/build_port.sh` copies it to `build/port/detoimeme/bin/detoimeme`
-   with `libs/`, the game files and the launcher.
-3. `tools/install_console.sh` (dry run) shows what it would do;
-   `tools/install_console.sh --yes` builds the port and copies it to
-   `/storage/roms/ports` over the console's `games-roms` Samba share, backing up
-   any file it replaces into `build/` first.
-4. On the console: START > Game Settings > Update Gamelists, then Ports.
-
-## Tests
-
-The game logic lives in `src/` as pure Lua:
+Built with [LÖVE](https://love2d.org/) 11.5. The game logic lives in `src/` as
+pure Lua and is tested with LuaJIT:
 
     luajit tests/run.lua
 
+Run on a computer, from the project root:
+
+    love .
+
+### Web build
+
+Needs [Node.js](https://nodejs.org/) (for `npx`) and `zip`:
+
+    tools/build_web.sh <output-dir>
+
+This packages the game with love.js 11.4.1 in compatibility mode. The result is
+a static site that can be served as-is over HTTPS.
+
+### Console build
+
+1. On the console, enable Samba (START > Network Settings > Enable Samba).
+2. Point the build at a folder holding an aarch64 LÖVE 11.5 binary and its `libs/`:
+   `LOVE_BIN_DIR` (or the first line of `build/love-bin-dir`), and `LOVE_BIN_NAME`
+   for the binary's file name (default `lafleur-ui`).
+3. `tools/install_console.sh` shows what it would do (dry run);
+   `tools/install_console.sh --yes` builds the port and copies it to
+   `/storage/roms/ports`, backing up any file it replaces.
+4. On the console: START > Game Settings > Update Gamelists, then Ports.
+
 ## Fonts
 
-Clebard and Calebard by LAFLEURSTUDIO (https://jonlekern.github.io/Fonts/),
-licence files in `assets/fonts/`.
+Clebard (words) and Calebard (interface) by LAFLEURSTUDIO, from
+[jonlekern.github.io/Fonts](https://jonlekern.github.io/Fonts/). Their licence
+files are in `assets/fonts/`.
+
+## Licence
+
+© 2026 LAFLEURSTUDIO. **All rights reserved.** You may play the game and read
+the code, but not copy, modify, redistribute or sell it without written
+permission. See [LICENSE](LICENSE).
