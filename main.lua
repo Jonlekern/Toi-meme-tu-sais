@@ -39,6 +39,36 @@ function app.switch(name)
   current.enter(app)
 end
 
+-- Fonts are rasterized at the size they are shown on screen (logical size x
+-- screen scale x DPI scale, in steps of 1/4) so text stays sharp when the
+-- logical screen is scaled up; their metrics stay in logical units.
+local function font_scale()
+  local s = ui.getScale() * love.graphics.getDPIScale()
+  return math.max(1, math.ceil(s * 4 - 0.01) / 4)
+end
+
+local function load_fonts(dpi)
+  if app.fonts and app.fonts.dpi == dpi then return end
+  local function font(path, size)
+    return love.graphics.newFont("assets/fonts/" .. path, size, "normal", dpi)
+  end
+  local cache = {}
+  app.fonts = {
+    dpi = dpi,
+    title = font("Calebard-Bold.ttf", 38),
+    button = font("Calebard-Bold.ttf", 22),
+    hint = font("Calebard-Regular.ttf", 14),
+    head = font("Calebard-Bold.ttf", 28),
+    ui = font("Calebard-Regular.ttf", 22),
+    small = font("Calebard-Regular.ttf", 18),
+    word = function(size)
+      cache[size] = cache[size] or font("Clebard-Tall.ttf", size)
+      return cache[size]
+    end,
+  }
+  app.fit = nil -- word layout depends on the font metrics
+end
+
 function app.save()
   love.filesystem.write("settings.txt", settings.serialize(app.settings))
 end
@@ -115,21 +145,6 @@ function love.load()
   pcall(function() love.window.setIcon(love.image.newImageData("assets/logo/logo-192.png")) end)
   love.math.setRandomSeed(os.time())
 
-  local function font(path, size) return love.graphics.newFont("assets/fonts/" .. path, size) end
-  local cache = {}
-  app.fonts = {
-    title = font("Calebard-Bold.ttf", 38),
-    button = font("Calebard-Bold.ttf", 22),
-    hint = font("Calebard-Regular.ttf", 14),
-    head = font("Calebard-Bold.ttf", 28),
-    ui = font("Calebard-Regular.ttf", 22),
-    small = font("Calebard-Regular.ttf", 18),
-    word = function(size)
-      cache[size] = cache[size] or font("Clebard-Tall.ttf", size)
-      return cache[size]
-    end,
-  }
-
   app.lists = words.load(read_file)
   app.builtin = app.lists.categories
   app.custom = custom.parse(read_file("mes-mots.txt"))
@@ -179,6 +194,7 @@ function app.relayout(w, h)
     app.fit = nil
     app.pill_scroll = 0
   end
+  load_fonts(font_scale())
 end
 
 function love.resize(w, h)

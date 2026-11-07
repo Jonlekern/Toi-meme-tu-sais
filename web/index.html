@@ -115,12 +115,16 @@
   };
   // The canvas fills the viewport (no offset, so pointer coordinates match);
   // the game letterboxes its own screen: 720x480, or 480x800 when the viewport
-  // is taller than wide. The runtime reads the canvas CSS size on each window
-  // resize event and passes the new size to the game (love.resize).
+  // is taller than wide. The game asks for a high-DPI window (conf.lua), so
+  // the runtime sizes the drawing buffer to the CSS size x devicePixelRatio on
+  // each window resize event and passes the CSS size to the game (love.resize).
+  // Keep the buffer at that same size here, so both always agree.
   function fitCanvas() {
     var c = document.getElementById('canvas');
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.floor(window.innerWidth * dpr), h = Math.floor(window.innerHeight * dpr);
+    if (c.width !== w) c.width = w;
+    if (c.height !== h) c.height = h;
   }
   window.addEventListener('resize', fitCanvas);
   // Some phones report the new viewport only after the rotation has finished:

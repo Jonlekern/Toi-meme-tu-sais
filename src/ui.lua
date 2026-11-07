@@ -40,6 +40,9 @@ function ui.layout(w, h)
   oy = (h - ui.H * scale) / 2
 end
 
+-- Window units per logical unit.
+function ui.getScale() return scale end
+
 function ui.toLogical(x, y)
   return (x - ox) / scale, (y - oy) / scale
 end
