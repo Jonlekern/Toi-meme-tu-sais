@@ -2,6 +2,8 @@
 # Installs build/port/ on the RG SP over Wi-Fi (guest Samba share games-roms of ROCKNIX).
 # Default is a dry run (prints every action, no network access). Pass --yes to really install.
 # Never touches /storage/roms/lafleur-music or /storage/.config/logind.conf.d.
+# Files on the share are written with `cat src > dest` then checked with cmp
+# (no cp/rsync/sed -i on the share: they misbehave over Samba).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -26,16 +28,16 @@ export COPYFILE_DISABLE=1
 if [ "$DRY" = 1 ]; then
   echo "[dry-run] nc -z -G 3 $HOST 445"
   echo "[dry-run] mount_smbfs -N //guest@$HOST/games-roms $MNT/games-roms (unless already mounted)"
-  echo "[dry-run] back up existing '$LAUNCHER' and detoimeme/ files that differ to $BACKUP/"
+  echo "[dry-run] back up existing '$LAUNCHER' and detoimeme/ files that differ to $BACKUP/ (cat > backup ; cmp)"
   echo "[dry-run] mkdir -p <share>/ports/detoimeme"
   echo "[dry-run] tools/build_port.sh (rebuild first)"
   n=0
   while IFS= read -r -d '' f; do
     rel="${f#$SRC/}"
-    echo "[dry-run] cp -X '$f' '<share>/ports/$rel' ; cmp"
+    echo "[dry-run] cat '$f' > '<share>/ports/$rel' ; cmp"
     n=$((n + 1))
   done < <(find "$SRC/detoimeme" -type f ! -name '._*' ! -name '.DS_Store' -print0 | sort -z)
-  echo "[dry-run] cp -X '$SRC/$LAUNCHER' '<share>/ports/$LAUNCHER' ; cmp   (launcher last)"
+  echo "[dry-run] cat '$SRC/$LAUNCHER' > '<share>/ports/$LAUNCHER' ; cmp   (launcher last)"
   n=$((n + 1))
   echo "[dry-run] $n file(s) to copy (only those that differ)"
   echo "[dry-run] warn if launcher or bin/detoimeme is not executable on the share"
@@ -72,10 +74,11 @@ copy_one() { # relative path under build/port
   if [ -f "$dest" ] && cmp -s "$f" "$dest"; then return; fi
   if [ -f "$dest" ]; then
     mkdir -p "$BACKUP/$(dirname "$rel")"
-    cp -X "$dest" "$BACKUP/$rel"
+    cat "$dest" > "$BACKUP/$rel"
+    cmp "$dest" "$BACKUP/$rel" || { echo "backup failed: $rel" >&2; exit 1; }
   fi
   mkdir -p "$(dirname "$dest")"
-  cp -X "$f" "$dest"
+  cat "$f" > "$dest"
   cmp "$f" "$dest" || { echo "verification failed: $rel" >&2; exit 1; }
   if [ -x "$f" ] && [ ! -x "$dest" ]; then echo "warning: $rel not executable on share" >&2; fi
   copied=$((copied + 1))
