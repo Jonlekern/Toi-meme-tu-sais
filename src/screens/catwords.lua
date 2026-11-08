@@ -109,7 +109,7 @@ function catwords.action(app, name, x, y)
   if listview.nav(st, name, n) then return end
   if name == "select" then
     open(app)
-  elseif name == "delete" or (name == "mycats" and app.console) then
+  elseif name == "delete" or (name == "mycats" and app.pads) then
     -- Suppr on a computer, Y on the console (C must not delete on a computer)
     delete(app)
   elseif name == "back" then
@@ -126,7 +126,7 @@ function catwords.action(app, name, x, y)
 end
 
 function catwords.draw(app)
-  local hint = app.console and "A : modifier · Y : supprimer · B : retour"
+  local hint = app.pads and "A : modifier · Y : supprimer · B : retour"
     or { "Entrée : modifier · Suppr : supprimer · Échap : retour", "Entrée : modifier · Suppr : supprimer" }
   local h = head(app)
   -- web: a tapped word opens its box, which has "Supprimer ce mot"

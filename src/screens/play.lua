@@ -238,7 +238,7 @@ function play.draw(app)
   elseif app.touched then
     if gesture_hint then ui.printc(gesture_hint, app.fonts.hint, 0, 436, ui.W, "grey") end
   else
-    local hint = app.console and "A : suivant · X : passer · clapet : suivant"
+    local hint = app.pads and "A : suivant · X : passer · clapet : suivant"
       or gesture_hint or "Clic : suivant · P : passer"
     ui.printc(hint, app.fonts.small, 0, 436, ui.W, "grey")
   end

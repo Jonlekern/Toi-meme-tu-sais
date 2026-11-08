@@ -5,6 +5,6 @@ function love.conf(t)
   t.window.height = 480
   t.window.resizable = true
   -- Full-resolution drawing on high-density screens (phones, Retina);
-  -- sizes and coordinates stay in window units. Not on the console.
-  t.window.highdpi = love._os == "Web" or love._os == "OS X"
+  -- sizes and coordinates stay in window units. Not on the RG SP console.
+  t.window.highdpi = love._os == "Web" or love._os == "OS X" or love._os == "Android"
 end

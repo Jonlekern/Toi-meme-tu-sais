@@ -173,6 +173,22 @@ function app.startRound()
 end
 
 
+-- Android (AYN Thor): closing the lid turns the screen off and the app loses
+-- focus; reopening it brings it back = next word, like the RG SP's lid.
+local hiddenAt
+function love.focus(f)
+  if not app.android then return end
+  local t = love.timer.getTime()
+  if not f then
+    hiddenAt = hiddenAt or t
+  else
+    if hiddenAt and t - hiddenAt >= 0.5 and current == screens.play and app.round and app.round.word then
+      dispatch("select")
+    end
+    hiddenAt = nil
+  end
+end
+
 -- A failing lid thread must never take the game down.
 function love.threaderror(t, e)
   print("lid: " .. tostring(e))
@@ -183,6 +199,8 @@ function love.load()
   io.stdout:setvbuf("line")
   app.console = love.system.getOS() == "Linux"
   app.web = love.system.getOS() == "Web"
+  app.android = love.system.getOS() == "Android" -- e.g. AYN Thor: buttons, touch and a lid
+  app.pads = app.console or app.android -- show button hints (A, B, X...)
   love.graphics.setBackgroundColor(ui.color.bg)
   pcall(function() love.window.setIcon(love.image.newImageData("assets/logo/logo-192.png")) end)
   love.math.setRandomSeed(os.time())

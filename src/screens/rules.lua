@@ -66,7 +66,7 @@ function rules.draw(app)
   end
   ui.set("grey")
   love.graphics.setFont(app.fonts.small)
-  local footer = app.console and "B : fermer" or "Échap : fermer"
+  local footer = app.pads and "B : fermer" or "Échap : fermer"
   if touch_close(app) then footer = "Touche pour fermer" end
   love.graphics.printf(footer, c.x + PAD, c.y + c.footer_y, c.inner, "right")
 end

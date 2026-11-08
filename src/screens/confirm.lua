@@ -49,7 +49,7 @@ function confirm.draw(app)
     ui.printc("Non", app.fonts.button, NO.x, NO.y + (NO.h - app.fonts.button:getHeight()) / 2, NO.w, "text")
   end
   if not app.touched then
-    local hint = app.console and "A : oui · B : non" or "Entrée : oui · Échap : non"
+    local hint = app.pads and "A : oui · B : non" or "Entrée : oui · Échap : non"
     ui.printc(hint, app.fonts.small, 0, ui.H - 44, ui.W, "grey")
   end
 end

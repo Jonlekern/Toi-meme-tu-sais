@@ -43,7 +43,7 @@ function timeup.draw(app)
   ui.printc("Temps écoulé", tf, 0, ui.H / 2 - 120, ui.W, "pink")
   ui.button("Rejouer", app.fonts.button, BTN.x, BTN.y, BTN.w, BTN.h, true)
   if not app.touched then
-    local hint = app.console and "B : retour à l'accueil" or "Échap : retour à l'accueil"
+    local hint = app.pads and "B : retour à l'accueil" or "Échap : retour à l'accueil"
     ui.printc(hint, app.fonts.small, 0, ui.H - 44, ui.W, "grey")
   end
 end
