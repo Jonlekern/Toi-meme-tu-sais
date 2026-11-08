@@ -186,8 +186,10 @@ function typing.draw(app)
     ui.print(t.title, tf, 30, ty, "pink")
     line_y = ty + 114
   else
-    -- keep the title clear of the touch buttons: smaller font when it would run under "OK"
-    if app.touched and tf:getWidth(t.title) > OKBTN.x - 10 - tx then tf = app.fonts.head end
+    -- smaller font when the title would run under "OK" (touch) or off the screen
+    local room = app.touched and OKBTN.x - 10 - tx or ui.W - 30 - tx
+    if tf:getWidth(t.title) > room then tf = app.fonts.head end
+    if tf:getWidth(t.title) > room then tf = app.fonts.button end
     ui.print(t.title, tf, tx, tf == app.fonts.title and 24 or 29, "pink")
   end
   local LINE_Y = line_y
