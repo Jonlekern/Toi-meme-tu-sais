@@ -108,6 +108,35 @@ function M.set_word(cat, index, word)
   return true
 end
 
+-- A pasted list: one word per line, or separated by "," or ";". Blank items dropped.
+function M.split_list(text)
+  local out = {}
+  for item in ((text or "") .. "\n"):gmatch("([^\r\n,;]*)[\r\n,;]") do
+    local w = clean(item)
+    if w ~= "" then out[#out + 1] = w end
+  end
+  return out
+end
+
+-- Adds words in order; returns how many were added and skipped (duplicate, too long).
+function M.add_words(cat, words)
+  local added, skipped = 0, 0
+  for _, w in ipairs(words) do
+    if clean(w) == "" then -- blank: not a word, not counted
+    elseif M.add_word(cat, w) then added = added + 1 else skipped = skipped + 1 end
+  end
+  return added, skipped
+end
+
+-- Replaces the whole list with words (same rules); returns kept and skipped counts.
+function M.set_words(cat, words)
+  local old = cat.words
+  cat.words = {}
+  local kept, skipped = M.add_words(cat, words)
+  if kept == 0 and skipped > 0 then cat.words = old end -- nothing usable: keep the list
+  return kept, skipped
+end
+
 function M.as_categories(cats)
   local out = {}
   for _, c in ipairs(cats) do

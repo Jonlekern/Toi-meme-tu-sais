@@ -1,7 +1,11 @@
 -- Typing: on-screen AZERTY keyboard on the console, system text input elsewhere.
--- app.typing = { title, noun, text, from, validate(text) -> true|nil, reason, commit(text) -> next screen name or nil }
+-- app.typing = { title, noun, text, from, validate(text) -> true|nil, reason, commit(text) -> next screen name or nil,
+--   delete() optional: offers "Supprimer" (web) }
+-- On the web the text is typed in a real text box of the page (listbox), so phones
+-- show their keyboard; this screen only waits for the answer.
 local ui = require("ui")
 local keyboard = require("keyboard")
+local listbox = require("listbox")
 
 local typing = {}
 typing.wants_text = true
@@ -28,7 +32,9 @@ function typing.enter(app)
   t.text = t.text or ""
   t.error = nil
   app.kb = keyboard.new()
-  if not app.console then
+  if app.web then
+    listbox.open("line", t.title, { t.text }, { del = t.delete ~= nil })
+  elseif not app.console then
     had_text_input = love.keyboard.hasTextInput()
     love.keyboard.setTextInput(true)
   end
@@ -72,6 +78,26 @@ local function cancel(app)
   local from = app.typing.from
   app.typing = nil
   app.switch(from)
+end
+
+-- Web: the text box's answer.
+function typing.update(app)
+  local t = app.typing
+  if not app.web or not t then return end
+  local mode, text = listbox.poll()
+  if not mode then return end
+  if mode == "cancel" then return cancel(app) end
+  if mode == "delete" and t.delete then
+    local from = t.from
+    t.delete()
+    app.typing = nil
+    return app.switch(from)
+  end
+  t.text = (text or ""):gsub("[\r\n]", " ")
+  submit(app)
+  if app.typing == t and t.error then -- not accepted: ask again, saying why
+    listbox.open("line", t.title, { t.text }, { del = t.delete ~= nil, error = t.error })
+  end
 end
 
 function typing.action(app, name, x, y)
@@ -141,6 +167,7 @@ local function draw_keys(app)
 end
 
 function typing.draw(app)
+  if app.web then return end -- the page's text box is shown instead
   layout()
   local t, f, W = app.typing, app.fonts.button, ui.W - 2 * X0
   local tx = 30

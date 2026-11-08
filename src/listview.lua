@@ -38,6 +38,21 @@ function lv.nav(st, name, n)
   return true
 end
 
+-- Finger drag (gesture events, web): the list follows the finger, the selection
+-- stays on a visible row. Returns true when the event was used.
+function lv.drag(st, name, info, n)
+  sync()
+  if name == "drag_up" then
+    st.drag0 = st.drag0 or st.scroll
+    local VIS = vis()
+    st.scroll = math.max(0, math.min(math.max(0, n - VIS), st.drag0 + math.floor(-info.dy / STEP + 0.5)))
+    st.sel = math.max(st.scroll + 1, math.min(st.scroll + VIS, st.sel))
+    return true
+  end
+  st.drag0 = nil -- the finger left: drag_end or a swipe
+  return name == "drag_end" or name == "swipe_left" or name == "swipe_right"
+end
+
 function lv.row_at(st, x, y, n)
   sync()
   local W, VIS = width(), vis()

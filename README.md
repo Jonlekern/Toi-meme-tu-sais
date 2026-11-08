@@ -36,7 +36,8 @@ The others hear clues that make no sense to them, while you two just know.
 - **No word comes back** until its whole pile has been used.
 - **Optional timer**: 30, 60 or 90 seconds. No score, just fun.
 - **Your own categories**: create them and type your own words in the game.
-  The console has an on-screen AZERTY keyboard.
+  The console has an on-screen AZERTY keyboard. On the web you can also paste a
+  whole list (one word per line, or separated by commas) and edit it in one go.
 - **Rules card** one tap away (the « ? » button).
 
 ## Platforms

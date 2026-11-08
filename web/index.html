@@ -65,6 +65,57 @@
   #installLater {
     margin-top: 4px; padding: 8px 0; background: none; color: #888; font-size: 15px; font-weight: 400;
   }
+  /* Word list text box (paste / edit a custom category) */
+  #listBackdrop {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 11;
+    display: none; align-items: flex-end; justify-content: center;
+    background: rgba(0,0,0,.6); box-sizing: border-box;
+    padding: 0 10px env(safe-area-inset-bottom);
+    font-family: 'Calebard', sans-serif;
+  }
+  #listBackdrop.open { display: flex; }
+  #listCard {
+    width: 100%; max-width: 480px; box-sizing: border-box;
+    background: #1a1a1a; border: 2px solid #F26EF2; border-bottom: 0; border-radius: 18px 18px 0 0;
+    padding: 14px 14px 16px; color: #f4f4f4; font-size: 15px;
+  }
+  #listCard .hd { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  #listCard h2 { margin: 0; color: #F26EF2; font-size: 18px; font-weight: 700; }
+  #listHelpBtn {
+    flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2px solid #F26EF2;
+    background: none; color: #F26EF2; font: 700 16px 'Calebard', sans-serif; padding: 0; cursor: pointer;
+  }
+  #listHelpBtn.on { background: #F26EF2; color: #1a1a1a; }
+  #listHelp {
+    display: none; background: #2a2a2a; border-radius: 10px; padding: 10px 12px; margin-top: 10px;
+    font-size: 13px; line-height: 1.45; color: #ddd;
+  }
+  #listHelp.open { display: block; }
+  #listHelp b { color: #F26EF2; font-weight: 700; }
+  #listText {
+    display: block; width: 100%; box-sizing: border-box; height: 34vh; min-height: 140px; margin: 10px 0 4px;
+    background: #111; border: 1px solid #444; border-radius: 10px; color: #f4f4f4;
+    font: 400 16px/1.5 'Calebard', sans-serif; padding: 10px; resize: none;
+  }
+  #listCount { font-size: 12px; color: #888; text-align: right; margin-bottom: 8px; }
+  #listLine {
+    display: none; width: 100%; box-sizing: border-box; margin: 12px 0;
+    background: #111; border: 1px solid #F26EF2; border-radius: 10px; color: #f4f4f4;
+    font: 400 16px 'Calebard', sans-serif; padding: 12px;
+  }
+  #listErr { display: none; color: #F26EF2; font-size: 14px; margin: 10px 0 0; }
+  #listCard button.del {
+    display: none; width: 100%; margin-top: 8px; border: 2px solid #F26EF2; border-radius: 999px; padding: 8px 0;
+    background: none; color: #F26EF2; cursor: pointer; font: 700 15px 'Calebard', sans-serif;
+  }
+  #listCard button.go {
+    display: block; width: 100%; border: 0; border-radius: 999px; padding: 11px 0; cursor: pointer;
+    background: #F26EF2; color: #1a1a1a; font: 700 16px 'Calebard', sans-serif;
+  }
+  #listCard button.no {
+    display: block; width: 100%; border: 0; background: none; color: #888; padding: 9px 0 0; cursor: pointer;
+    font: 400 15px 'Calebard', sans-serif;
+  }
   </style>
 </head>
 <body>
@@ -93,6 +144,24 @@
     <button type="button" id="installLater">Plus tard</button>
   </div>
 </div>
+<div id="listBackdrop">
+  <div id="listCard" role="dialog" aria-labelledby="listTitle">
+    <div class="hd"><h2 id="listTitle">Coller une liste</h2><button type="button" id="listHelpBtn" aria-label="Aide">?</button></div>
+    <div id="listHelp">
+      <b>Un mot par ligne</b>, ou séparés par des virgules.<br>
+      <b>Coller&nbsp;:</b> copie ta liste (Notes, WhatsApp…), puis appui long dans la case → <b>Coller</b>.<br>
+      <b>Modifier&nbsp;:</b> change ou efface des lignes. Ce qui reste dans la case devient la liste.<br>
+      Les doublons et les mots de plus de 40 lettres sont ignorés.
+    </div>
+    <div id="listErr"></div>
+    <input id="listLine" type="text" placeholder="Touche ici pour écrire" enterkeyhint="done" autocomplete="off" spellcheck="false" maxlength="48">
+    <textarea id="listText" spellcheck="false" autocapitalize="sentences" placeholder="Pizza&#10;Kebab&#10;Tacos"></textarea>
+    <div id="listCount">0 mot</div>
+    <button type="button" class="go" id="listGo">Ajouter</button>
+    <button type="button" class="del" id="listDel">Supprimer ce mot</button>
+    <button type="button" class="no" id="listNo">Annuler</button>
+  </div>
+</div>
 <script>
   var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
   function drawLoadingText(text) {
@@ -109,9 +178,70 @@
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
   }, false);
 
+
+  // Word list text box: the game prints "TTMS-LIST<US>mode<US>title<US>dir<US>file<US>words"
+  // (words separated by <RS>); the answer goes back as a file: "mode\ntext", or "cancel".
+  function listItems(text) {
+    return text.split(/[\r\n,;]/).map(function (s) { return s.trim(); }).filter(function (s) { return s; });
+  }
+  function openListBox(line) {
+    if (typeof line !== 'string' || line.indexOf('TTMS-LIST\x1f') !== 0) return false;
+    var p = line.split('\x1f'), mode = p[1], dir = p[3], file = p[4];
+    var words = p[5] ? p[5].split('\x1e') : [];
+    var single = mode === 'line';
+    var back = document.getElementById('listBackdrop');
+    var ta = document.getElementById('listText'), input = document.getElementById('listLine');
+    var count = document.getElementById('listCount'), err = document.getElementById('listErr');
+    var help = document.getElementById('listHelp'), helpBtn = document.getElementById('listHelpBtn');
+    var del = document.getElementById('listDel');
+    document.getElementById('listTitle').textContent =
+      single ? p[2] : (mode === 'edit' ? 'Modifier la liste' : 'Coller une liste');
+    document.getElementById('listGo').textContent =
+      mode === 'paste' ? 'Ajouter' : (mode === 'edit' || words[0] ? 'Enregistrer' : 'Ajouter');
+    ta.style.display = count.style.display = helpBtn.style.display = single ? 'none' : '';
+    input.style.display = single ? 'block' : 'none';
+    del.style.display = single && p[6] === '1' ? 'block' : 'none';
+    err.textContent = p[7] || '';
+    err.style.display = p[7] ? 'block' : 'none';
+    ta.value = mode === 'edit' ? words.join('\n') : '';
+    input.value = single ? (words[0] || '') : '';
+    help.classList.remove('open'); helpBtn.classList.remove('on');
+    function update() { var n = listItems(ta.value).length; count.textContent = n + (n > 1 ? ' mots' : ' mot'); }
+    update();
+    ta.oninput = update;
+    input.oninput = function () { err.style.display = 'none'; };
+    input.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); reply('line', input.value); } };
+    helpBtn.onclick = function () { help.classList.toggle('open'); helpBtn.classList.toggle('on'); };
+    function reply(m, text) {
+      back.classList.remove('open');
+      ta.blur(); input.blur();
+      var path = dir + '/' + file;
+      try { Module.FS_unlink(path); } catch (e) {}
+      try { Module.FS_createDataFile(dir, file, new TextEncoder().encode(m + '\n' + (text || '')), true, true); }
+      catch (e) { console.error('list box: ' + e); }
+      document.getElementById('canvas').focus();
+    }
+    document.getElementById('listGo').onclick = function () { reply(mode, single ? input.value : ta.value); };
+    document.getElementById('listNo').onclick = function () { reply('cancel'); };
+    del.onclick = function () { reply('delete'); };
+    back.onclick = function (e) { if (e.target === back) reply('cancel'); };
+    back.classList.add('open');
+    if (single) { try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) {} }
+    if (mode === 'edit') ta.scrollTop = ta.scrollHeight;
+    return true;
+  }
+  // Keys and touches in the box stay in the box (not the game).
+  (function () {
+    var back = document.getElementById('listBackdrop');
+    ['keydown', 'keyup', 'keypress', 'pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'click', 'wheel'].forEach(function (t) {
+      back.addEventListener(t, function (e) { e.stopPropagation(); });
+    });
+  })();
+
   var Module = {
     arguments: ['./game.love'],
     INITIAL_MEMORY: 16777216,
+    print: function (text) { if (!openListBox(text)) console.log(text); },
     printErr: console.error.bind(console),
     canvas: (function () {
       var canvas = document.getElementById('canvas');

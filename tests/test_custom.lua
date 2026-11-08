@@ -6,6 +6,25 @@ local function eqlist(a, b)
 end
 
 return {
+  test_custom_split_list = function()
+    eqlist(custom.split_list("Pizza\n  Kebab  \r\nTacos, Sushi ;Ramen\n\n, ,"),
+      { "Pizza", "Kebab", "Tacos", "Sushi", "Ramen" })
+    eqlist(custom.split_list(nil), {})
+  end,
+  test_custom_add_words = function()
+    local c = { name = "A", words = { "Pizza" } }
+    local added, skipped = custom.add_words(c, { "pizza", "Kebab", "kebab", string.rep("x", 41), "Tacos" })
+    T.eq(added, 2)
+    T.eq(skipped, 3)
+    eqlist(c.words, { "Pizza", "Kebab", "Tacos" })
+  end,
+  test_custom_set_words = function()
+    local c = { name = "A", words = { "Pizza", "Kebab" } }
+    local kept, skipped = custom.set_words(c, { "Tacos", "tacos", "Pizza", "" })
+    T.eq(kept, 2)
+    T.eq(skipped, 1)
+    eqlist(c.words, { "Tacos", "Pizza" })
+  end,
   test_custom_roundtrip = function()
     local cats = {
       { name = "Potes du lycée", words = { "Étienne", "la crêpe à Zoë" } },

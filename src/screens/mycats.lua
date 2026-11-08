@@ -50,6 +50,11 @@ local function delete(app)
   end)
 end
 
+-- Web: drag the list with a finger (taps come as actions).
+function mycats.gesture(app, name, info)
+  listview.drag(app.ed.cats, name, info, #app.custom + 1)
+end
+
 function mycats.action(app, name, x, y)
   local st, n = app.ed.cats, #app.custom + 1
   if listview.nav(st, name, n) then return end

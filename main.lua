@@ -182,6 +182,7 @@ end
 function love.load()
   io.stdout:setvbuf("line")
   app.console = love.system.getOS() == "Linux"
+  app.web = love.system.getOS() == "Web"
   love.graphics.setBackgroundColor(ui.color.bg)
   pcall(function() love.window.setIcon(love.image.newImageData("assets/logo/logo-192.png")) end)
   love.math.setRandomSeed(os.time())
