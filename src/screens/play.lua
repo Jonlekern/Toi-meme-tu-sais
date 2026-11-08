@@ -205,7 +205,7 @@ function play.draw(app)
 
   if app.note then
     if app.note.portrait ~= ui.portrait then app.note = new_note(app, "stuck") end
-    app.note:draw({ app.fonts.title, app.fonts.head, app.fonts.button })
+    app.note:draw(app.fonts.note)
   end
 
   -- web hints: swipes, or how to peel the note off

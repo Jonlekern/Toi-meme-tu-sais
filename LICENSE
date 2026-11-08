@@ -14,6 +14,6 @@ IMPLIED. IN NO EVENT SHALL LAFLEURSTUDIO BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
 
 Third-party components keep their own licences:
-- Clebard (GUST Font License) and Calebard (SIL Open Font License 1.1) fonts,
-  by LAFLEURSTUDIO, licence files in assets/fonts/.
+- Clebard (GUST Font License), Calebard and Espresso 4.40.- (SIL Open Font
+  License 1.1) fonts, by LAFLEURSTUDIO, licence files in assets/fonts/.
 - LÖVE (zlib licence) and love.js, used to run and build the game.

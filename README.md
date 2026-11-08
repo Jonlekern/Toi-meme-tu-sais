@@ -100,7 +100,8 @@ a static site that can be served as-is over HTTPS.
 
 ## Fonts
 
-Clebard (words) and Calebard (interface) by LAFLEURSTUDIO, from
+Clebard (words), Calebard (interface) and Espresso 4.40.- (sticky note) by
+LAFLEURSTUDIO, from
 [jonlekern.github.io/Fonts](https://jonlekern.github.io/Fonts/). Their licence
 files are in `assets/fonts/`.
 

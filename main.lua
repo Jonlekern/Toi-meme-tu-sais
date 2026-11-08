@@ -88,6 +88,12 @@ local function load_fonts(dpi)
     head = font("Calebard-Bold.ttf", 28),
     ui = font("Calebard-Regular.ttf", 22),
     small = font("Calebard-Regular.ttf", 18),
+    -- sticky note title, largest first
+    note = {
+      font("Espresso440-Espresso.ttf", 64),
+      font("Espresso440-Espresso.ttf", 52),
+      font("Espresso440-Espresso.ttf", 40),
+    },
     word = function(size)
       cache[size] = cache[size] or font("Clebard-Tall.ttf", size)
       return cache[size]
