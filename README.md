@@ -47,6 +47,7 @@ The others hear clues that make no sense to them, while you two just know.
 | **Anbernic RG SP (ROCKNIX)** | In the Ports menu. Close and reopen the lid to get a new word. Every word shown is saved to `stats.txt` for later statistics. |
 | **Web** | Plays in any browser with mouse, keyboard or touch: [jonlekern.github.io/Toi-meme-tu-sais](https://jonlekern.github.io/Toi-meme-tu-sais/). |
 | **Phone** | The web version switches to an upright layout with big buttons. |
+| **Android handhelds (AYN Thor)** | An Android app on the [Releases](https://github.com/Jonlekern/Toi-meme-tu-sais/releases/latest) page. Buttons, touch, and closing and reopening the lid gives a new word. |
 
 <p align="center">
   <img src="docs/images/console-keyboard.png" width="380" alt="On-screen keyboard on the console">
@@ -58,7 +59,7 @@ The others hear clues that make no sense to them, while you two just know.
 
 | Action | RG SP | Computer | Phone |
 |---|---|---|---|
-| Next word | A, or close and reopen the lid | Click, Space, Enter or drag right | Tap or swipe right |
+| Next word | A, or close and reopen the lid (also on the AYN Thor) | Click, Space, Enter or drag right | Tap or swipe right |
 | Previous word | — | Drag left | Swipe left |
 | Skip word | X | P | Swipe right (same as next) |
 | Hide the word (sticky note) | — | Long press, drag up to peel it off | Long press, swipe up to peel it off |
@@ -87,6 +88,14 @@ Needs [Node.js](https://nodejs.org/) (for `npx`) and `zip`:
 
 This packages the game with love.js 11.4.1 in compatibility mode. The result is
 a static site that can be served as-is over HTTPS.
+
+### Android build (AYN Thor)
+
+The workflow `.github/workflows/android.yml` packages the game with LÖVE for
+Android 11.5 and signs the APK. Push a tag such as `v1.0.1` to publish it on
+the Releases page. To install on the device: open the latest release in the
+device's browser, download the `.apk`, open it and allow installing from the
+browser when Android asks.
 
 ### Console build
 
