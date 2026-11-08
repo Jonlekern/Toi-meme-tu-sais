@@ -38,11 +38,22 @@
   #installCard .head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   #installCard .head img { width: 40px; height: 40px; border-radius: 9px; flex: none; }
   #installCard h2 { margin: 0; font-weight: 700; font-size: 19px; color: #F26EF2; }
-  #installCard p { margin: 0 0 10px; font-weight: 400; }
-  #installCard .key {
-    display: inline-block; border: 1px solid #f4f4f4; border-radius: 5px;
-    padding: 0 6px; font-size: 13px; line-height: 1.4; white-space: nowrap;
+  #installCard p { margin: 0 0 12px; font-weight: 400; color: #bbb; font-size: 14px; }
+  #installCard ol { list-style: none; margin: 0; padding: 0; }
+  #installCard li { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid #2c2c2c; }
+  #installCard .n {
+    flex: none; width: 26px; height: 26px; border-radius: 50%; background: #F26EF2; color: #1a1a1a;
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;
   }
+  #installCard .t { flex: 1; }
+  #installCard .t small { color: #888; font-size: 13px; }
+  #installCard b { color: #F26EF2; font-weight: 700; }
+  #installCard .ic {
+    flex: none; width: 38px; height: 38px; border-radius: 9px; background: #2c2c2c;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #installCard .ic svg { width: 22px; height: 22px; stroke: #f4f4f4; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  #installCard .ic.add { width: 64px; font-family: -apple-system, sans-serif; font-size: 14px; font-weight: 600; color: #4da3ff; }
   #installCard button {
     display: block; width: 100%; border: 0; cursor: pointer; font-family: inherit;
     -webkit-tap-highlight-color: transparent;
@@ -63,8 +74,21 @@
   <div id="installCard" role="dialog" aria-labelledby="installTitle">
     <div class="head"><img src="icon-192.png" alt=""><h2 id="installTitle">Installe le jeu</h2></div>
     <p>Garde-le sur ton écran d'accueil, comme une vraie appli.</p>
-    <p id="installHowIos">iPhone (Safari)&nbsp;: touche <span class="key">⬆︎ Partager</span> puis «&nbsp;Sur l'écran d'accueil&nbsp;».</p>
-    <p id="installHowAndroid">Android (Chrome)&nbsp;: touche <span class="key">Installer</span> ci-dessous, ou le menu <span class="key">⋮</span> puis «&nbsp;Ajouter à l'écran d'accueil&nbsp;».</p>
+    <ol id="installHowIos">
+      <li><span class="n">1</span><span class="t">En bas de Safari, touche <b>Partager</b><br><small>(ou d'abord ••• si tu ne le vois pas)</small></span>
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></svg></span></li>
+      <li><span class="n">2</span><span class="t">Fais défiler et touche <b>Sur l'écran d'accueil</b></span>
+        <span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg></span></li>
+      <li><span class="n">3</span><span class="t">Touche <b>Ajouter</b> en haut à droite</span><span class="ic add">Ajouter</span></li>
+    </ol>
+    <ol id="installHowAndroid">
+      <li><span class="n">1</span><span class="t">Touche <b>Installer</b> ci-dessous</span>
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg></span></li>
+      <li><span class="n">2</span><span class="t">Sinon, ouvre le menu <b>⋮</b> en haut à droite</span>
+        <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.3" fill="#f4f4f4"/><circle cx="12" cy="12" r="1.3" fill="#f4f4f4"/><circle cx="12" cy="19" r="1.3" fill="#f4f4f4"/></svg></span></li>
+      <li><span class="n">3</span><span class="t">Touche <b>Ajouter à l'écran d'accueil</b></span>
+        <span class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v7M8.5 11.5h7"/></svg></span></li>
+    </ol>
     <button type="button" id="installOk">Installer</button>
     <button type="button" id="installLater">Plus tard</button>
   </div>
