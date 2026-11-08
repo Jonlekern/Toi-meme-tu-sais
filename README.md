@@ -3,9 +3,13 @@
 <h1 align="center">Toi-même tu sais</h1>
 
 <p align="center"><b>A French party game about the memories you share.</b><br>
-By LAFLEURSTUDIO · Anbernic RG SP · Web · Phone</p>
+By LAFLEURSTUDIO · Web · Phone · AYN Thor · Anbernic RG SP</p>
 
-<p align="center"><a href="https://jonlekern.github.io/Toi-meme-tu-sais/"><b>▶ Play online</b></a></p>
+<p align="center">
+  <a href="https://jonlekern.github.io/Toi-meme-tu-sais/"><b>▶ Play online</b></a> ·
+  <a href="https://github.com/Jonlekern/Toi-meme-tu-sais/releases/latest"><b>AYN Thor app</b></a> ·
+  <a href="#3-anbernic-rg-sp"><b>Anbernic RG SP</b></a>
+</p>
 
 <p align="center">
   <img src="docs/images/home.png" width="380" alt="Home screen">
@@ -40,32 +44,63 @@ The others hear clues that make no sense to them, while you two just know.
   whole list (one word per line, or separated by commas) and edit it in one go.
 - **Rules card** one tap away (the « ? » button).
 
-## Platforms
+## Get the game
 
-| | |
-|---|---|
-| **Anbernic RG SP (ROCKNIX)** | In the Ports menu. Close and reopen the lid to get a new word. Every word shown is saved to `stats.txt` for later statistics. |
-| **Web** | Plays in any browser with mouse, keyboard or touch: [jonlekern.github.io/Toi-meme-tu-sais](https://jonlekern.github.io/Toi-meme-tu-sais/). |
-| **Phone** | The web version switches to an upright layout with big buttons. |
-| **Android handhelds (AYN Thor)** | An Android app on the [Releases](https://github.com/Jonlekern/Toi-meme-tu-sais/releases/latest) page. Buttons, touch, and closing and reopening the lid gives a new word. |
+### 1. Web app (phone and computer)
+
+**[▶ jonlekern.github.io/Toi-meme-tu-sais](https://jonlekern.github.io/Toi-meme-tu-sais/)**
+
+Plays in any browser, with mouse, keyboard or touch. On a phone it switches to
+an upright layout with big buttons, swipes and the sticky note. To keep it on
+your home screen, follow the install steps the page shows (Share › Add to Home
+Screen on iPhone, ⋮ › Install app on Android).
 
 <p align="center">
-  <img src="docs/images/console-keyboard.png" width="380" alt="On-screen keyboard on the console">
-  <img src="docs/images/phone-home.png" width="150" alt="Phone home screen">
-  <img src="docs/images/phone-word.png" width="150" alt="Phone word screen">
+  <img src="docs/images/phone-home.png" width="200" alt="Phone home screen">
+  <img src="docs/images/phone-word.png" width="200" alt="Phone word screen">
+</p>
+
+### 2. AYN Thor (Android app)
+
+**[⬇ Download the APK from the latest release](https://github.com/Jonlekern/Toi-meme-tu-sais/releases/latest)**
+
+1. On the Thor, open the link above in the browser.
+2. Download the `.apk` file and open it.
+3. Allow installing from the browser when Android asks, then tap Install.
+
+Buttons and touch both work. Close and reopen the lid to get a new word.
+
+<p align="center">
+  <img src="docs/images/thor-home.png" width="380" alt="AYN Thor home screen">
+  <img src="docs/images/thor-word.png" width="380" alt="AYN Thor word screen">
+</p>
+
+### 3. Anbernic RG SP
+
+Runs on ROCKNIX, in the Ports menu. It is copied to the console over the
+network (see [Console build](#console-build) below). Close and reopen the lid to
+get a new word. An on-screen AZERTY keyboard lets you type your own words, and
+every word shown is saved to `stats.txt` for later statistics.
+
+<p align="center">
+  <img src="docs/images/rgsp-home.png" width="380" alt="RG SP home screen">
+  <img src="docs/images/rgsp-word.png" width="380" alt="RG SP word screen">
+</p>
+<p align="center">
+  <img src="docs/images/console-keyboard.png" width="380" alt="On-screen keyboard on the RG SP">
 </p>
 
 ## Controls
 
-| Action | RG SP | Computer | Phone |
-|---|---|---|---|
-| Next word | A, or close and reopen the lid (also on the AYN Thor) | Click, Space, Enter or drag right | Tap or swipe right |
-| Previous word | — | Drag left | Swipe left |
-| Skip word | X | P | Swipe right (same as next) |
-| Hide the word (sticky note) | — | Long press, drag up to peel it off | Long press, swipe up to peel it off |
-| Rules | SELECT | ? | « ? » |
-| My categories | Y | C | « Mes catégories » |
-| Back | B | Escape | « ‹ Retour » |
+| Action | Phone | Computer | AYN Thor | RG SP |
+|---|---|---|---|---|
+| Next word | Tap or swipe right | Click, Space, Enter or drag right | A, tap, swipe right, or close and reopen the lid | A, or close and reopen the lid |
+| Previous word | Swipe left | Drag left | Swipe left | — |
+| Skip word | Swipe right (same as next) | P | X | X |
+| Hide the word (sticky note) | Long press, swipe up to peel it off | Long press, drag up to peel it off | Long press, swipe up to peel it off | — |
+| Rules | « ? » | ? | SELECT or « ? » | SELECT |
+| My categories | « Mes catégories » | C | Y | Y |
+| Back | « ‹ Retour » | Escape | B | B |
 
 ---
 
