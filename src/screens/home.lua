@@ -19,7 +19,7 @@ local function geom(app)
     g.chrono_y = 490
     g.CATS = { x = 30, y = 572, w = ui.W - 60, h = 54 }
     g.BTN = { x = 30, y = 646, w = ui.W - 60, h = 62 }
-    g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 56 } -- big touch target
+    g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 64, corner = 130 } -- big touch target
   else
     g.title_y = 24
     g.AREA = { x = 0, y = 142, w = ui.W, h = 164 }
@@ -28,7 +28,7 @@ local function geom(app)
     local bw = app.fonts.button:getWidth("Jouer") + 48
     g.BTN = { x = 690 - bw, y = 400, w = bw, h = 54 }
     g.CATS = { x = 30, y = 424, w = app.fonts.hint:getWidth("Mes catégories") + 32, h = 40 }
-    g.HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 46 } -- big touch target
+    g.HELP = { cx = ui.W - 30 - 11, cy = 35, r = 11, hit = 50, corner = 110 } -- big touch target
   end
   g.top = g.AREA.y + 8 -- first pill row
   return g
@@ -119,8 +119,10 @@ function home.action(app, name, x, y)
     return app.switch("mycats")
   elseif name == "tap" then
     if cats_button(app) and inside(CATS, x, y) then return app.switch("mycats") end
+    -- "?": its circle, or anywhere in the top-right corner (easy with a thumb)
     local dx, dy = x - HELP.cx, y - HELP.cy
     if dx * dx + dy * dy <= HELP.hit * HELP.hit then return app.switch("rules") end
+    if x >= ui.W - HELP.corner and y <= HELP.cy + HELP.hit then return app.switch("rules") end
     local off = app.pill_scroll or 0
     for i, p in ipairs(list) do
       if y >= AREA.y and y <= AREA.y + AREA.h and inside({ x = p.x, y = p.y - off, w = p.w, h = p.h }, x, y) then
