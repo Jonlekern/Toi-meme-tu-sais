@@ -14,11 +14,11 @@ local function geom(app)
   local g = {}
   if ui.portrait then
     g.title_y = 76
-    g.AREA = { x = 0, y = 196, w = ui.W, h = 290 }
-    g.chrono_label_y = 510
-    g.chrono_y = 544
-    g.CATS = { x = 30, y = 632, w = ui.W - 60, h = 54 }
-    g.BTN = { x = 30, y = 706, w = ui.W - 60, h = 62 }
+    g.AREA = { x = 0, y = 196, w = ui.W, h = 236 }
+    g.chrono_label_y = 456
+    g.chrono_y = 490
+    g.CATS = { x = 30, y = 572, w = ui.W - 60, h = 54 }
+    g.BTN = { x = 30, y = 646, w = ui.W - 60, h = 62 }
     g.HELP = { cx = ui.W - 30 - 15, cy = 40, r = 15, hit = 56 } -- big touch target
   else
     g.title_y = 24
