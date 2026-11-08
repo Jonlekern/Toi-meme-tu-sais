@@ -103,22 +103,29 @@ local function word_fit(app, BOX)
   return app.fit
 end
 
--- Sticky note sized to cover the word, slightly turned.
+-- Square sticky note over the word, slightly turned. Landscape leaves it
+-- clear of the hint below; the word is then refitted under it (word_box).
+local function note_side(app, BOX)
+  if ui.portrait then return math.min(BOX.w - 10, BOX.h) end
+  return BOX.h + 30
+end
+
 local function new_note(app, state)
-  local g = layout(app)
-  local BOX = g.BOX
-  local fit = word_fit(app, BOX)
-  local f = app.fonts.word(fit.size)
-  local ww = 0
-  for _, line in ipairs(fit.lines) do ww = math.max(ww, f:getWidth(line)) end
-  local wh = f:getHeight() * #fit.lines
-  local w = math.min(math.max(ww + 60, 320), BOX.w - 10)
-  local h = ui.portrait and math.min(math.max(wh + 60, w * 0.62), BOX.h)
-    or math.min(math.max(wh + 20, w * 0.45), BOX.h - 10) -- clear of the hint below
+  local BOX = layout(app).BOX
+  local side = note_side(app, BOX)
   local rot = (love.math.random() < 0.5 and -1 or 1) * (0.02 + 0.025 * love.math.random())
-  local n = sticky.new(BOX.x + BOX.w / 2, BOX.y + BOX.h / 2, w, h, rot, state)
+  local n = sticky.new(BOX.x + BOX.w / 2, BOX.y + BOX.h / 2, side, side, rot, state)
   n.portrait = ui.portrait
   return n
+end
+
+-- Where the word is laid out: BOX, or the inside of the note while there is one.
+local function word_box(app, BOX)
+  if not app.note then return BOX end
+  local side = note_side(app, BOX) - 50
+  if side >= BOX.w and side >= BOX.h then return BOX end
+  return { x = BOX.x + (BOX.w - side) / 2, y = BOX.y + (BOX.h - side) / 2,
+    w = math.min(side, BOX.w), h = math.min(side, BOX.h) }
 end
 
 -- Gestures (web only, see main.lua): swipes change the word, a long press drops
@@ -179,7 +186,8 @@ function play.draw(app)
   end
 
   if r.word then
-    local fit = word_fit(app, BOX)
+    local WB = word_box(app, BOX)
+    local fit = word_fit(app, WB)
     local f = app.fonts.word(fit.size)
     local lh = f:getHeight()
     local y = BOX.y + (BOX.h - lh * #fit.lines) / 2
