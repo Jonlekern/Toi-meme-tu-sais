@@ -43,6 +43,9 @@ end
 -- Window units per logical unit.
 function ui.getScale() return scale end
 
+-- Logical space left empty beside (x) and above/below (y) the logical screen.
+function ui.margins() return ox / scale, oy / scale end
+
 function ui.toLogical(x, y)
   return (x - ox) / scale, (y - oy) / scale
 end
@@ -52,7 +55,7 @@ function ui.begin()
   love.graphics.push()
   love.graphics.translate(ox, oy)
   love.graphics.scale(scale, scale)
-  love.graphics.setScissor(ox, oy, ui.W * scale, ui.H * scale)
+  love.graphics.setScissor() -- the margins can be drawn on too (phone edges)
 end
 
 function ui.finish()
@@ -66,7 +69,7 @@ function ui.clip(x, y, w, h)
 end
 
 function ui.unclip()
-  love.graphics.setScissor(ox, oy, ui.W * scale, ui.H * scale)
+  love.graphics.setScissor()
 end
 
 function ui.set(name) love.graphics.setColor(ui.color[name]) end

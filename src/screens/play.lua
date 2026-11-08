@@ -44,8 +44,13 @@ local function layout(app)
   if ui.portrait then
     local bf = app.fonts.small
     g.back_font = bf
-    g.BACK = { x = 10, y = 14, w = 10 + bf:getWidth("‹ Retour") + 10, h = 48 }
-    g.top_y = 24 -- "‹ Retour" and timer line
+    -- a tall phone leaves room above and below: move the top line and the
+    -- hint toward the edges, keeping clear of the status bar / home bar
+    local _, my = ui.margins()
+    local d = math.max(0, my - 48)
+    g.BACK = { x = 10, y = 14 - d, w = 10 + bf:getWidth("‹ Retour") + 10, h = 48 }
+    g.top_y = 24 - d -- "‹ Retour" and timer line
+    g.hint_y = 650 + d
     g.BOX = { x = 20, y = 120, w = ui.W - 40, h = 430 }
   else
     g.back_font = app.fonts.hint
@@ -211,13 +216,17 @@ function play.draw(app)
   -- web hints: swipes, or how to peel the note off
   local gesture_hint
   if not app.console then
-    if locked(app) then gesture_hint = "Glisse vers le haut pour décoller"
+    if locked(app) then
+      gesture_hint = ui.portrait and "Glisse vers le haut\npour décoller" or "Glisse vers le haut pour décoller"
     elseif app.touched then
       gesture_hint = ui.portrait and "Glisse › mot suivant\n‹ mot précédent" or "Glisse › suivant · ‹ précédent"
     end
   end
   if ui.portrait then
-    ui.printc(gesture_hint or "Touche : mot suivant", app.fonts.small, 0, 650, ui.W, "grey")
+    local f = app.fonts.small
+    f:setLineHeight(1.3) -- two-line hints: Calebard's own line gap is too tight
+    ui.printc(gesture_hint or "Touche : mot suivant", f, 0, layout(app).hint_y, ui.W, "grey")
+    f:setLineHeight(1)
   elseif app.touched then
     if gesture_hint then ui.printc(gesture_hint, app.fonts.hint, 0, 436, ui.W, "grey") end
   else
