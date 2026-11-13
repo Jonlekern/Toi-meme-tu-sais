@@ -174,22 +174,6 @@ function app.startRound()
 end
 
 
--- Android (AYN Thor): closing the lid turns the screen off and the app loses
--- focus; reopening it brings it back = next word, like the RG SP's lid.
-local hiddenAt
-function love.focus(f)
-  if not app.android then return end
-  local t = love.timer.getTime()
-  if not f then
-    hiddenAt = hiddenAt or t
-  else
-    if hiddenAt and t - hiddenAt >= 0.5 and current == screens.play and app.round and app.round.word then
-      dispatch("select")
-    end
-    hiddenAt = nil
-  end
-end
-
 -- AYN Thor bottom screen (see src/dual.lua): read its commands, publish the
 -- timer state. app.dual is true while the Android side shows the bottom screen.
 local dualClock, dualLast = 0, nil
@@ -198,6 +182,10 @@ local function dual_apply(c)
   local r = current == screens.play and app.round or nil
   if c.name == "dual" then
     app.dual = c.on
+  elseif c.name == "lid" then
+    -- Android measures how long the screen was off (the game is paused meanwhile,
+    -- so its own focus events arrive together on wake-up and cannot be timed)
+    if r and r.word then dispatch("select") end
   elseif c.name == "timer" then
     if app.settings.timer ~= c.seconds then
       app.settings.timer = c.seconds

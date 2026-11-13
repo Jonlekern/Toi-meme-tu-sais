@@ -32,6 +32,7 @@ import java.nio.charset.Charset;
 public class TimerPresentation extends Presentation {
     // LÖVE save directory: <files>/save/<identity>, identity from conf.lua
     private static final String IDENTITY = "detoimeme";
+    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public TimerPresentation(Context outer, Display display) {
         super(outer, display);
@@ -44,8 +45,27 @@ public class TimerPresentation extends Presentation {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             | WindowManager.LayoutParams.FLAG_FULLSCREEN
             | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        File dir = new File(getContext().getFilesDir(), "save/" + IDENTITY + "/thor");
-        setContentView(new TimerView(getContext(), dir));
+        setContentView(new TimerView(getContext(), bridgeDir(getContext())));
+    }
+
+    /** Folder shared with the game: <files>/save/<identity>/thor */
+    static File bridgeDir(Context c) {
+        return new File(c.getFilesDir(), "save/" + IDENTITY + "/thor");
+    }
+
+    private static long cmdCount = 0;
+
+    /** One command per file, written aside then renamed so the game never reads half of it. */
+    static synchronized void send(File dir, String cmd) {
+        try {
+            if (!dir.isDirectory() && !dir.mkdirs()) return;
+            String name = String.format("cmd-%015d-%04d.txt", System.currentTimeMillis(), cmdCount++ % 10000);
+            File tmp = new File(dir, "." + name);
+            FileOutputStream out = new FileOutputStream(tmp);
+            try { out.write((cmd + "\n").getBytes(UTF8)); } finally { out.close(); }
+            if (!tmp.renameTo(new File(dir, name))) tmp.delete();
+        } catch (IOException ignored) {
+        }
     }
 
     static final class TimerView extends View {
@@ -55,7 +75,6 @@ public class TimerPresentation extends Presentation {
             GREY = 0xFF888888, OUTLINE = 0xFF555555;
         private static final int[] TIMERS = { 0, 30, 60, 90 };
         private static final String[] LABELS = { "aucun", "30 s", "60 s", "90 s" };
-        private static final Charset UTF8 = Charset.forName("UTF-8");
 
         private final File dir;
         private final Handler handler = new Handler(Looper.getMainLooper());
@@ -63,7 +82,6 @@ public class TimerPresentation extends Presentation {
         private final RectF r = new RectF();
         private Typeface regular, bold, tall;
         private String lastState = "";
-        private long cmdCount = 0;
         // state from the game
         private boolean playing, paused;
         private int remaining = -1, total = 0, word = 0, timer = 0;
@@ -142,18 +160,7 @@ public class TimerPresentation extends Presentation {
             invalidate();
         }
 
-        /** One command per file, written aside then renamed so the game never reads half of it. */
-        private void send(String cmd) {
-            try {
-                if (!dir.isDirectory() && !dir.mkdirs()) return;
-                String name = String.format("cmd-%015d-%04d.txt", System.currentTimeMillis(), cmdCount++ % 10000);
-                File tmp = new File(dir, "." + name);
-                FileOutputStream out = new FileOutputStream(tmp);
-                try { out.write((cmd + "\n").getBytes(UTF8)); } finally { out.close(); }
-                if (!tmp.renameTo(new File(dir, name))) tmp.delete();
-            } catch (IOException ignored) {
-            }
-        }
+        private void send(String cmd) { TimerPresentation.send(dir, cmd); }
 
         // ---- layout (logical coordinates, same as the mockup) ----
 

@@ -2,6 +2,7 @@
 -- the game through small files in the save directory. Pure Lua.
 --   thor/state.txt   written by the game: what the bottom screen shows
 --   thor/cmd-*.txt   written by Android, one command each, read then removed
+--                    ("lid": the lid was closed then reopened, or the screen woke up)
 local dual = {}
 
 dual.DIR = "thor"
@@ -26,7 +27,7 @@ end
 function dual.command(text)
   if type(text) ~= "string" then return nil end
   local name, arg = text:match("^%s*(%a+)%s*(%d*)%s*$")
-  if name == "pause" or name == "resume" or name == "restart" then return { name = name } end
+  if name == "pause" or name == "resume" or name == "restart" or name == "lid" then return { name = name } end
   if name == "timer" then
     local n = tonumber(arg)
     if n and TIMERS[n] then return { name = name, seconds = n } end

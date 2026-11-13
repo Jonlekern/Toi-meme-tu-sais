@@ -22,6 +22,7 @@ return {
     T.eq(c.seconds, 90)
     T.eq(dual.command("dual 1").on, true)
     T.eq(dual.command("dual 0").on, false)
+    T.eq(dual.command("lid\n").name, "lid")
   end,
   test_dual_command_rejects_junk = function()
     T.eq(dual.command("timer 45"), nil)
