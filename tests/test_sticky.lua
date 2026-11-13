@@ -47,9 +47,9 @@ return {
   test_sticky_sticks_back_below_threshold = function()
     local n = sticky.new(0, 0, 200, 100, 0, "stuck")
     n:grab(50, 0)
-    n:drag(30)
-    T.eq(n.fold, 30)
-    T.eq(n:release(30, 100), "back")
+    n:drag(15)
+    T.eq(n.fold, 15)
+    T.eq(n:release(15, 100), "back")
     T.ok(n:blocking())
     n:update(0.2)
     T.eq(n.state, "stuck")
@@ -65,10 +65,35 @@ return {
     T.eq(n:update(0.25), "gone")
   end,
 
+  test_sticky_peels_from_a_short_pull = function()
+    -- a fifth of the height is enough
+    local n = sticky.new(0, 0, 200, 100, 0, "stuck")
+    n:grab(0, 0)
+    T.eq(n:release(22, 0), "fly")
+  end,
+
+  test_sticky_grab_just_outside = function()
+    -- a finger a little off the edge still takes the note
+    local n = sticky.new(100, 100, 200, 100, 0, "stuck")
+    T.ok(n:grab(100, 170))
+  end,
+
+  test_sticky_pop_on_long_press = function()
+    local n = sticky.new(0, 0, 200, 100, 0, "stuck")
+    T.ok(n:pop(-30, 0))
+    T.eq(n.state, "fly")
+    T.eq(n.side, "left")
+    T.ok(not n:blocking())
+    n:update(0.1)
+    T.eq(n:update(0.25), "gone")
+    local m = sticky.new(0, 0, 200, 100)
+    T.ok(not m:pop(0, 0), "not while it is still dropping")
+  end,
+
   test_sticky_flick_peels = function()
     local n = sticky.new(0, 0, 200, 100, 0, "stuck")
     n:grab(50, 0)
-    T.eq(n:release(25, 900), "fly")
+    T.eq(n:release(16, 500), "fly")
     local m = sticky.new(0, 0, 200, 100, 0, "stuck")
     m:grab(50, 0)
     T.eq(m:release(10, 900), "back") -- too short to count

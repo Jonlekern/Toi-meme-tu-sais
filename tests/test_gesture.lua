@@ -49,6 +49,24 @@ return {
     T.eq(g:release(105, 104, 1.0), nil) -- no tap after a long press
   end,
 
+  test_gesture_drag_after_long_press = function()
+    -- a finger that rests on the note before pulling it must still drag
+    local g = gesture.new()
+    g:press(100, 100, 0)
+    T.eq(g:update(0.6), "long_press")
+    local name, info = g:move(100, 60, 0.8)
+    T.eq(name, "drag_up")
+    T.eq(info.up, 40)
+    local name2, info2 = g:release(100, 20, 0.9)
+    T.eq(name2, "drag_end")
+    T.eq(info2.up, 80)
+  end,
+  test_gesture_no_swipe_after_long_press = function()
+    local g = gesture.new()
+    g:press(100, 100, 0)
+    g:update(0.6)
+    T.eq(g:release(300, 100, 0.7), "drag_end")
+  end,
   test_gesture_long_press_needs_stillness = function()
     local g = gesture.new()
     g:press(100, 100, 0)

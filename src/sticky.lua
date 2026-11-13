@@ -7,9 +7,10 @@ sticky.__index = sticky
 sticky.DROP = 0.25    -- s, falling onto the word
 sticky.FLY = 0.3      -- s, peeled off and flying away
 sticky.BACK = 0.15    -- s, sticking back
-sticky.PEEL = 0.35    -- fraction of the height past which it peels off
-sticky.FLICK = 700    -- px/s upward: a quick flick peels it off too
-sticky.FLICK_MIN = 20 -- px the flick must at least travel
+sticky.PEEL = 0.2     -- fraction of the height past which it peels off
+sticky.FLICK = 400    -- px/s upward: a quick flick peels it off too
+sticky.FLICK_MIN = 15 -- px the flick must at least travel
+sticky.GRAB = 40      -- px around the note that still take it (thumbs miss edges)
 sticky.RADIUS = 5     -- rounded corners
 
 local function ease_out(k) return 1 - (1 - k) ^ 3 end
@@ -37,18 +38,33 @@ function sticky:to_local(x, y)
   return dx * c - dy * s, dx * s + dy * c
 end
 
-function sticky:contains(x, y)
+-- margin: extra px around the note that count as on it
+function sticky:contains(x, y, margin)
   local lx, ly = self:to_local(x, y)
-  return math.abs(lx) <= self.w / 2 and math.abs(ly) <= self.h / 2
+  local m = margin or 0
+  return math.abs(lx) <= self.w / 2 + m and math.abs(ly) <= self.h / 2 + m
 end
 
--- Start peeling from a press at (x, y): returns false if the press missed the note
--- or the note is not at rest.
+local function at_rest(self) return self.state == "stuck" or self.state == "back" end
+
+-- Start peeling from a press at (x, y), anywhere on the note (centre included)
+-- or just around it: returns false if the press missed or the note is not at rest.
 function sticky:grab(x, y)
-  if (self.state ~= "stuck" and self.state ~= "back") or not self:contains(x, y) then return false end
+  if not at_rest(self) or not self:contains(x, y, sticky.GRAB) then return false end
   local lx = self:to_local(x, y)
   self.side = lx < 0 and "left" or "right"
   self.state = "peel"
+  return true
+end
+
+-- Long press on the note: it peels off by itself, flying away on the side of
+-- the press. Returns false if the press missed or the note is not at rest.
+function sticky:pop(x, y)
+  if not at_rest(self) or not self:contains(x, y, sticky.GRAB) then return false end
+  local lx = self:to_local(x, y)
+  self.side = lx < 0 and "left" or "right"
+  self.state, self.t = "fly", 0
+  self.fly_fold = self.fold
   return true
 end
 

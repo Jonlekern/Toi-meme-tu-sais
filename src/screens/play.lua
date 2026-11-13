@@ -128,14 +128,16 @@ local function word_box(app, BOX)
     w = math.min(side, BOX.w), h = math.min(side, BOX.h) }
 end
 
--- Gestures (web only, see main.lua): swipes change the word, a long press drops
--- the sticky note, dragging up peels it off.
+-- Gestures (touch screens, see main.lua): swipes change the word, a long press
+-- drops the sticky note, dragging up (from anywhere on it) or a long press on it
+-- peels it off.
 function play.gesture(app, name, info)
   local note = app.note
   if name == "long_press" then
     local g = layout(app)
-    if note or not app.round.word then return end
     if buttons(app) and hit(g.BACK, info.x, info.y) then return end
+    if note then return note:pop(info.x, info.y) end -- long press on the note: off it goes
+    if not app.round.word then return end
     app.note = new_note(app, "drop")
   elseif name == "drag_up" then
     if note then
