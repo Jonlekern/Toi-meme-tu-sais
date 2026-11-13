@@ -68,7 +68,10 @@ Screen on iPhone, ⋮ › Install app on Android).
 2. Download the `.apk` file and open it.
 3. Allow installing from the browser when Android asks, then tap Install.
 
-Buttons and touch both work. Close and reopen the lid to get a new word.
+Buttons and touch both work. Close and reopen the lid to get a new word. The
+bottom screen shows the timer: time left, Pause, Recommencer, and the duration
+(none, 30, 60 or 90 s), which you can change during play. Start the game from
+the top screen.
 
 <p align="center">
   <img src="docs/images/thor-home.png" width="380" alt="AYN Thor home screen">
@@ -97,7 +100,7 @@ every word shown is saved to `stats.txt` for later statistics.
 | Next word | Tap or swipe right | Click, Space, Enter or drag right | A, tap, swipe right, or close and reopen the lid | A, or close and reopen the lid |
 | Previous word | Swipe left | Drag left | Swipe left | — |
 | Skip word | Swipe right (same as next) | P | X | X |
-| Hide the word (sticky note) | Long press, swipe up to peel it off | Long press, drag up to peel it off | Long press, swipe up to peel it off | — |
+| Hide the word (sticky note) | Long press; swipe up or long press on it to peel it off | Long press; drag up or long press on it to peel it off | Long press; swipe up or long press on it to peel it off | — |
 | Rules | « ? » | ? | SELECT or « ? » | SELECT |
 | My categories | « Mes catégories » | C | Y | Y |
 | Back | « ‹ Retour » | Escape | B | B |
