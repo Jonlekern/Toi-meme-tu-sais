@@ -7,12 +7,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -42,10 +47,31 @@ public class TimerPresentation extends Presentation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // never take the focus: buttons and the lid keep going to the game
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        Window w = getWindow();
+        w.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             | WindowManager.LayoutParams.FLAG_FULLSCREEN
+            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+            | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(new TimerView(getContext(), bridgeDir(getContext())));
+        // the device theme is light: without this, the strip a system bar
+        // leaves (a white line at the edge of the screen) shows its background
+        w.setBackgroundDrawable(new ColorDrawable(TimerView.BG));
+        w.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        if (Build.VERSION.SDK_INT >= 28) {
+            w.getAttributes().layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+        TimerView v = new TimerView(getContext(), bridgeDir(getContext()));
+        v.setBackgroundColor(TimerView.BG);
+        setContentView(v);
+        if (Build.VERSION.SDK_INT >= 30) {
+            w.setDecorFitsSystemWindows(false);
+            WindowInsetsController c = w.getInsetsController();
+            if (c != null) {
+                c.hide(WindowInsets.Type.systemBars());
+                c.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        }
     }
 
     /** Folder shared with the game: <files>/save/<identity>/thor */
@@ -71,7 +97,8 @@ public class TimerPresentation extends Presentation {
     static final class TimerView extends View {
         // logical size of the screen, as on the mockup; scaled to fit
         private static final float W = 620, H = 540;
-        private static final int BG = 0xFF1A1A1A, PINK = 0xFFF26EF2, TEXT = 0xFFF4F4F4,
+        static final int BG = 0xFF1A1A1A;
+        private static final int PINK = 0xFFF26EF2, TEXT = 0xFFF4F4F4,
             GREY = 0xFF888888, OUTLINE = 0xFF555555;
         private static final int[] TIMERS = { 0, 30, 60, 90 };
         private static final String[] LABELS = { "aucun", "30 s", "60 s", "90 s" };
