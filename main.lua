@@ -12,6 +12,7 @@ local stats = require("stats")
 local custom = require("custom")
 local listview = require("listview")
 local gesture = require("gesture")
+local dual = require("dual")
 
 local screens = {
   home = require("screens.home"),
@@ -189,6 +190,53 @@ function love.focus(f)
   end
 end
 
+-- AYN Thor bottom screen (see src/dual.lua): read its commands, publish the
+-- timer state. app.dual is true while the Android side shows the bottom screen.
+local dualClock, dualLast = 0, nil
+
+local function dual_apply(c)
+  local r = current == screens.play and app.round or nil
+  if c.name == "dual" then
+    app.dual = c.on
+  elseif c.name == "timer" then
+    if app.settings.timer ~= c.seconds then
+      app.settings.timer = c.seconds
+      app.save()
+    end
+    if r then r:set_seconds(c.seconds) end
+  elseif r and c.name == "pause" then r:pause(true)
+  elseif r and c.name == "resume" then r:pause(false)
+  elseif r and c.name == "restart" then r:restart()
+  end
+end
+
+local function dual_update(dt)
+  dualClock = dualClock + dt
+  if dualClock < 0.1 then return end
+  dualClock = 0
+  local names = love.filesystem.getDirectoryItems(dual.DIR)
+  table.sort(names) -- cmd-<time>.txt: oldest first
+  for _, name in ipairs(names) do
+    if name:sub(1, 4) == "cmd-" then
+      local path = dual.DIR .. "/" .. name
+      local text = love.filesystem.read(path)
+      love.filesystem.remove(path)
+      local c = dual.command(text)
+      if c then dual_apply(c) end
+    end
+  end
+  local r = app.round
+  local playing = current == screens.play and r ~= nil and r.word ~= nil
+  local text = dual.state({
+    playing = playing, remaining = r and r.remaining, total = r and r.seconds,
+    paused = r and r.paused, word = r and r.pos, timer = app.settings.timer,
+  })
+  if text ~= dualLast then
+    dualLast = text
+    pcall(love.filesystem.write, dual.STATE, text)
+  end
+end
+
 -- A failing lid thread must never take the game down.
 function love.threaderror(t, e)
   print("lid: " .. tostring(e))
@@ -214,6 +262,8 @@ function love.load()
 
   app.relayout(love.graphics.getDimensions())
   app.switch("home")
+
+  if app.android then love.filesystem.createDirectory(dual.DIR) end
 
   -- Lid switch (RG SP): closing then reopening it = next word.
   if app.console then
@@ -244,6 +294,7 @@ function love.update(dt)
       end
     end
   end
+  if app.android then dual_update(dt) end
   if gestSource then gesture_event(gest:update(love.timer.getTime())) end
   if current.update then current.update(app, dt) end
 end

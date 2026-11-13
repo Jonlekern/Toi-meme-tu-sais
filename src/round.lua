@@ -14,6 +14,7 @@ function round.new(deck, seconds, on_done)
     category = nil,
     remaining = nil,
     started = false,
+    paused = false,
     shown = nil, -- word on screen and its category, if any
     history = {}, -- words shown in this round, in order: { word, category }
     pos = 0, -- index in history of the word on screen (#history + 1: no word)
@@ -41,8 +42,24 @@ function round:show(i)
   self.word, self.category = e and e.word, e and e.category
   self.shown = e and { word = e.word, category = e.category } or nil
   self.started = true
+  self.paused = false
   -- The timer is per word: every new word restarts it from the full duration.
   if self.seconds > 0 then self.remaining = self.seconds end
+end
+
+-- Timer controls (AYN Thor bottom screen): pause, restart the current word's
+-- countdown, or change the duration during play (0 = no timer).
+function round:pause(on) self.paused = on and true or false end
+
+function round:restart()
+  self.paused = false
+  if self.started and self.seconds > 0 then self.remaining = self.seconds end
+end
+
+function round:set_seconds(s)
+  self.seconds = s or 0
+  if self.seconds == 0 then self.remaining = nil end
+  self:restart()
 end
 
 -- Next word: after going back, replay the history before drawing new words
@@ -71,7 +88,7 @@ function round:skip() self:advance("passé") end
 function round:finish() self:report("fin") end
 
 function round:update(dt)
-  if not self.started or not self.remaining then return nil end
+  if not self.started or not self.remaining or self.paused then return nil end
   self.remaining = self.remaining - dt
   if self.remaining <= 0 then
     self.remaining = 0

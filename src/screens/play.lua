@@ -180,7 +180,7 @@ function play.draw(app)
     end
     if r.category then ui.print(r.category.label, uf, labelX, 24, "grey") end
   end
-  if r.remaining then
+  if r.remaining and not app.dual then -- AYN Thor: the timer is on the bottom screen
     local text = fmt(r.remaining)
     ui.print(text, uf, ui.W - 30 - uf:getWidth(text), g.top_y, "pink")
   end

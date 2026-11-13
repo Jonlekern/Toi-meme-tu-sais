@@ -70,6 +70,18 @@ jobs:
           mv gradle.properties.new gradle.properties
           cat gradle.properties
 
+      - name: Second screen (AYN Thor)
+        run: |
+          # our activity (LÖVE's plus the bottom-screen timer) and its fonts
+          JAVA=love-android/app/src/main/java/ch/lafleurstudio/toimemetusais
+          mkdir -p "$JAVA" love-android/app/src/embed/assets/thor-fonts
+          cp android/*.java "$JAVA/"
+          cp assets/fonts/Calebard-Regular.ttf assets/fonts/Calebard-Bold.ttf assets/fonts/Clebard-Tall.ttf love-android/app/src/embed/assets/thor-fonts/
+          MANIFEST=love-android/app/src/main/AndroidManifest.xml
+          grep -q 'android:name="org.love2d.android.GameActivity"' "$MANIFEST"
+          sed -i 's/android:name="org.love2d.android.GameActivity"/android:name="ch.lafleurstudio.toimemetusais.ThorActivity"/' "$MANIFEST"
+          grep -n 'ThorActivity' "$MANIFEST"
+
       - name: App icon
         run: |
           pip install --quiet pillow
