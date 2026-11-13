@@ -78,9 +78,34 @@ return {
     T.ok(n:grab(100, 170))
   end,
 
+  test_sticky_grab_middle = function()
+    -- near the centre the whole bottom edge rolls up, straight
+    local n = sticky.new(100, 100, 300, 300, 0, "stuck")
+    T.ok(n:grab(110, 100))
+    T.eq(n.side, "middle")
+    n:drag(60)
+    local cx, cy, px, py = n:corner()
+    T.eq(cx, 0); T.eq(cy, 150); T.eq(px, 0); T.eq(py, 90)
+    local main, flap = n:geometry()
+    T.ok(flap ~= nil)
+    local m = sticky.new(100, 100, 300, 300, 0, "stuck")
+    m:grab(200, 100)
+    T.eq(m.side, "right")
+  end,
+
+  test_sticky_middle_flies_straight = function()
+    local n = sticky.new(0, 0, 300, 300, -0.05, "stuck")
+    n:grab(0, 0)
+    n:release(100, 0)
+    n:update(0.1)
+    local dx, _, rot = n:pose()
+    T.eq(dx, 0)
+    T.eq(rot, -0.05)
+  end,
+
   test_sticky_pop_on_long_press = function()
     local n = sticky.new(0, 0, 200, 100, 0, "stuck")
-    T.ok(n:pop(-30, 0))
+    T.ok(n:pop(-60, 0))
     T.eq(n.state, "fly")
     T.eq(n.side, "left")
     T.ok(not n:blocking())

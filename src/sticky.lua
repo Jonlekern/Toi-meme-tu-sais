@@ -1,6 +1,6 @@
 -- Pink sticky note that hides the word (web, long press) and is peeled off by
--- dragging up: the bottom corner on the finger's side folds back along a line
--- that follows the finger. Geometry and states are pure Lua; only draw() uses LÖVE.
+-- dragging up: the bottom corner on the finger's side (or, from the middle,
+-- the whole bottom edge) folds back along a line that follows the finger. Geometry and states are pure Lua; only draw() uses LÖVE.
 local sticky = {}
 sticky.__index = sticky
 
@@ -10,6 +10,7 @@ sticky.BACK = 0.15    -- s, sticking back
 sticky.PEEL = 0.2     -- fraction of the height past which it peels off
 sticky.FLICK = 400    -- px/s upward: a quick flick peels it off too
 sticky.FLICK_MIN = 15 -- px the flick must at least travel
+sticky.MIDDLE = 1 / 6 -- presses this close to the centre (fraction of the width) roll the whole bottom up
 sticky.GRAB = 40      -- px around the note that still take it (thumbs miss edges)
 sticky.RADIUS = 5     -- rounded corners
 
@@ -47,12 +48,18 @@ end
 
 local function at_rest(self) return self.state == "stuck" or self.state == "back" end
 
+-- "middle" near the centre, else the side of the press
+local function side_of(self, x, y)
+  local lx = self:to_local(x, y)
+  if math.abs(lx) <= self.w * sticky.MIDDLE then return "middle" end
+  return lx < 0 and "left" or "right"
+end
+
 -- Start peeling from a press at (x, y), anywhere on the note (centre included)
 -- or just around it: returns false if the press missed or the note is not at rest.
 function sticky:grab(x, y)
   if not at_rest(self) or not self:contains(x, y, sticky.GRAB) then return false end
-  local lx = self:to_local(x, y)
-  self.side = lx < 0 and "left" or "right"
+  self.side = side_of(self, x, y)
   self.state = "peel"
   return true
 end
@@ -61,8 +68,7 @@ end
 -- the press. Returns false if the press missed or the note is not at rest.
 function sticky:pop(x, y)
   if not at_rest(self) or not self:contains(x, y, sticky.GRAB) then return false end
-  local lx = self:to_local(x, y)
-  self.side = lx < 0 and "left" or "right"
+  self.side = side_of(self, x, y)
   self.state, self.t = "fly", 0
   self.fly_fold = self.fold
   return true
@@ -114,7 +120,7 @@ function sticky:pose()
     return 0, -70 * (1 - e), self.rot - 0.2 * (1 - e), 1 + 0.12 * (1 - e), 1 - e
   elseif self.state == "fly" then
     local e = ease_in(math.min(self.t / sticky.FLY, 1))
-    local turn = self.side == "right" and -1 or 1
+    local turn = self.side == "middle" and 0 or (self.side == "right" and -1 or 1)
     return 40 * turn * -e, -1000 * e, self.rot + turn * 0.7 * e, 1 + 0.08 * e, e
   end
   return 0, 0, self.rot, 1, 0
@@ -179,7 +185,10 @@ function sticky.fold(poly, cx, cy, px, py)
 end
 
 -- Where the folded corner sits for the current fold amount (note coordinates).
+-- From the middle, the bottom edge's centre moves straight up: the whole
+-- bottom rolls up along a horizontal line.
 function sticky:corner()
+  if self.side == "middle" then return 0, self.h / 2, 0, self.h / 2 - self.fold end
   local sx = self.side == "left" and -1 or 1
   local cx, cy = sx * self.w / 2, self.h / 2
   return cx, cy, cx - sx * 0.35 * self.fold, cy - self.fold
