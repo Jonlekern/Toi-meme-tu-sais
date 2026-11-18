@@ -38,7 +38,7 @@ end
 function rules.enter(app) end
 
 function rules.action(app, name, x, y)
-  if name == "back" or name == "rules" then
+  if name == "back" or name == "rules" or name == "ok" then
     app.switch("home")
   elseif name == "tap" then
     if touch_close(app) then return app.switch("home") end

@@ -101,7 +101,8 @@ every word shown is saved to `stats.txt` for later statistics.
 | Previous word | Swipe left | Drag left | Swipe left | — |
 | Skip word | Swipe right (same as next) | P | X | X |
 | Hide the word (sticky note) | Long press; swipe up or long press on it to peel it off | Long press; drag up or long press on it to peel it off | Long press; swipe up or long press on it to peel it off | — |
-| Rules | « ? » | ? | SELECT or « ? » | SELECT |
+| Rules | « ? » | ? | SELECT or « ? » | START |
+| Quit the game | — | — | — | SELECT on the home screen |
 | My categories | « Mes catégories » | C | Y | Y |
 | Back | « ‹ Retour » | Escape | B | B |
 

@@ -1,4 +1,4 @@
--- "Sûr ?" over the screen that asked (app.confirm = { from, yes }).
+-- "Sûr ?" over the screen that asked (app.confirm = { from, yes, title = optional question }).
 local ui = require("ui")
 
 local confirm = {}
@@ -41,7 +41,7 @@ function confirm.draw(app)
   ui.set("backdrop")
   love.graphics.rectangle("fill", 0, 0, ui.W, ui.H)
   layout()
-  ui.printc("Sûr ?", app.fonts.title, 0, ui.H / 2 - 70, ui.W, "pink")
+  ui.printc(app.confirm.title or "Sûr ?", app.fonts.title, 0, ui.H / 2 - 70, ui.W, "pink")
   -- buttons for touch and for the mouse (web/computer); the console uses A/B
   if app.touched or not app.console then
     ui.button("Oui", app.fonts.button, YES.x, YES.y, YES.w, YES.h)

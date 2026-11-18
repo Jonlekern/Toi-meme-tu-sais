@@ -113,7 +113,13 @@ function home.action(app, name, x, y)
   -- the pill count can change (custom categories): keep the focus on something that exists
   app.focus = math.max(1, math.min(jouer, app.focus or 1))
   local f = app.focus
-  if name == "rules" then
+  -- RG SP: SELECT quits the game (after "Quitter le jeu ?"), START opens the rules
+  if app.console and name == "rules" then
+    app.confirm = { from = "home", title = "Quitter le jeu ?", yes = function() love.event.quit() end }
+    return app.switch("confirm")
+  elseif app.console and name == "ok" then
+    return app.switch("rules")
+  elseif name == "rules" then
     return app.switch("rules")
   elseif name == "mycats" then
     return app.switch("mycats")
@@ -231,6 +237,10 @@ function home.draw(app)
   love.graphics.circle("line", HELP.cx, HELP.cy, HELP.r)
   local qf = ui.portrait and app.fonts.ui or app.fonts.small
   ui.printc("?", qf, HELP.cx - HELP.r, HELP.cy - qf:getHeight() / 2, HELP.r * 2, "pink")
+  if app.console and not app.touched then -- RG SP: how to leave the game
+    local hf, t = app.fonts.hint, "SELECT : quitter"
+    ui.print(t, hf, HELP.cx - HELP.r - 14 - hf:getWidth(t), HELP.cy - hf:getHeight() / 2, "grey")
+  end
 
   if ui.portrait then
     ui.box(CATS.x, CATS.y, CATS.w, CATS.h, nil, "outline")
@@ -244,6 +254,8 @@ function home.draw(app)
     local hf, room = app.fonts.hint, BTN.x - 30 - 20
     local hint = "SELECT : règles · Y : mes catégories"
     if hf:getWidth(hint) > room then hint = "SELECT : règles · Y : catégories" end
+    if app.console then hint = "START : règles · Y : mes catégories" end
+    if hf:getWidth(hint) > room then hint = "START : règles · Y : catégories" end
     if not app.pads then hint = "? : règles · C : catégories" end
     ui.print(hint, hf, 30, BTN.y + (BTN.h - hf:getHeight()) / 2, "grey")
   end
